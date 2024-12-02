@@ -7,6 +7,7 @@ const UserDashboard = () => {
     const [appliedJobs, setAppliedJobs] = useState([]);
     const [filteredApplications, setFilteredApplications] = useState([]);
     const [selectedJobRole, setSelectedJobRole] = useState("");
+    const [scheduledInterviews, setScheduledInterviews] = useState([]);
     const navigate = useNavigate();
 
     const fetchApplications = async () => {
@@ -75,9 +76,24 @@ const UserDashboard = () => {
         return appliedJobs.some(appliedJob => appliedJob.jobID === jobID);
     };
 
+    const fetchScheduledInterviews = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.get("http://localhost:3001/api/user-interviews", 
+                { headers: { token: token } }
+            );
+            setScheduledInterviews(response.data);
+        }
+        catch (err) {
+            console.log(err.response?.data?.message || "Failed to fetch scheduled interviews");
+        }
+    };
+
+
     useEffect(() => {
         fetchApplications();
         fetchAppliedJobs();
+        fetchScheduledInterviews();
     }, []);
 
     return (
@@ -157,6 +173,32 @@ const UserDashboard = () => {
                 </div>
             </div>
 
+                {/* Scheduled Interviews Section */}
+            <div>
+                <h2>Your Scheduled Interviews</h2>
+                {scheduledInterviews.length === 0 ? (
+                    <p>No interviews scheduled</p>
+                ) : (
+                    scheduledInterviews.map((interview, index) => (
+                        <div key={index}>
+                            <h3>Interview for {interview.jobTitle}</h3>
+                            <p>Company: {interview.companyName}</p>
+                            <p>Date: {new Date(interview.interviewDate).toLocaleDateString()}</p>
+                            <p>Time: {interview.interviewTime}</p>
+                            <p>Mode: {interview.interviewMode}</p>
+                            {interview.interviewLink && (
+                                <p>
+                                    Interview Link: 
+                                    <a href={interview.interviewLink} target="_blank" rel="noopener noreferrer">
+                                        Join Interview
+                                    </a>
+                                </p>
+                            )}
+                            <p>Application Status: {interview.applicationStatus}</p>
+                        </div>
+                    ))
+                )}
+            </div>
             <div>
                 <button onClick={handleLogout}>Logout</button>
             </div>

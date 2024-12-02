@@ -16,9 +16,19 @@ const RecruiterDashboard = () => {
         ctc: "",
         lastDateToApply: ""
     });
-
+    const [interviews, setInterviews] = useState([]);
+    const [interviewForm, setInterviewForm] = useState({
+        applicationID: "",
+        interviewDate: "",
+        interviewTime: "",
+        interviewMode: "",
+        interviewLink: ""
+    });
     const [postedJobs, setPostedJobs] = useState([]);
+    const [rejectedApplications, setRejectedApplications] = useState([]);
+    const [shortListedApplications, setShortListedApplications] = useState([]);
     const [jobApplications, setJobApplications] = useState([]);
+    const [appliedResumes, setAppliedResumes] = useState([]);
 
     const navigate = useNavigate();
 
@@ -43,8 +53,11 @@ const RecruiterDashboard = () => {
 
             alert(response.data.message);
             fetchPostedJobs();
-            
-            // Reset form
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || "Failed to post job");
+        }
+        finally{
             setJobData({
                 jobID: "",
                 companyName: "",
@@ -58,9 +71,6 @@ const RecruiterDashboard = () => {
                 ctc: "",
                 lastDateToApply: ""
             });
-        } catch (err) {
-            console.error(err);
-            alert(err.response?.data?.message || "Failed to post job");
         }
     };
 
@@ -85,10 +95,83 @@ const RecruiterDashboard = () => {
                 "http://localhost:3001/api/jobApplications", 
                 { headers: { recruiterToken: token } }
             );
-            setJobApplications(response.data);
+            const activeApplications = response.data.filter(
+                app => app.applicationStatus === 'Applied'
+            );
+            const rejectedApplications = response.data.filter(
+                app => app.applicationStatus === 'Rejected'
+            );
+            const shortListedApplications = response.data.filter(
+                app => app.applicationStatus === 'Shortlisted'
+            );
+            setShortListedApplications(shortListedApplications);
+            setRejectedApplications(rejectedApplications);
+            setJobApplications(activeApplications);
         } catch (err) {
             console.error(err);
             alert(err.response?.data?.message || "Failed to fetch job applications");
+        }
+    };
+
+    const fetchAppliedResumes = async () => {
+        try {
+            const token = localStorage.getItem("recruiterToken");
+            const response = await axios.get(
+                "http://localhost:3001/api/appliedResume", 
+                { headers: { recruiterToken: token } }
+            );
+            setAppliedResumes(response.data.resumes);
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || "Failed to fetch applied resumes");
+        }
+    };
+
+    const downloadResume = async (resumeId) => {
+        try {
+            const token = localStorage.getItem("recruiterToken");
+            const response = await axios.get(
+                `http://localhost:3001/api/download-resume/${resumeId}`, 
+                { 
+                    headers: { recruiterToken: token },
+                    responseType: 'blob' 
+                }
+            );
+
+            const resume = appliedResumes.find(r => r._id === resumeId);
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', resume ? resume.fileName : 'resume.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || "Failed to download resume");
+        }
+    };
+
+    const viewResume = async (resumeId) => {
+        try {
+            const token = localStorage.getItem("recruiterToken");
+            const response = await axios.get(
+                `http://localhost:3001/api/download-resume/${resumeId}`, 
+                { 
+                    headers: { recruiterToken: token },
+                    responseType: 'blob' 
+                }
+            );
+
+            const blob = new Blob([response.data], { type: response.headers['content-type'] });
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, '_blank');
+
+            setTimeout(() => window.URL.revokeObjectURL(url), 100);
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || "Failed to view resume");
         }
     };
 
@@ -114,9 +197,63 @@ const RecruiterDashboard = () => {
         navigate("/");
     };
 
+    const scheduleInterview = async (e) => {
+        e.preventDefault();
+        try {
+            const token = localStorage.getItem("recruiterToken");
+            const response = await axios.post(
+                "http://localhost:3001/api/schedule-interview", 
+                interviewForm,
+                { headers: { recruiterToken: token } }
+            );
+
+            alert(response.data.message);
+            fetchInterviews();
+            
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || "Failed to schedule interview");
+        }
+        finally {
+            // Reset interview form
+            setInterviewForm({
+                applicationID: "",
+                interviewDate: "",
+                interviewTime: "",
+                interviewMode: "",
+                interviewLink: ""
+            });
+        }
+    };
+
+    const fetchInterviews = async () => {
+        try {
+            const token = localStorage.getItem("recruiterToken");
+            const response = await axios.get(
+                "http://localhost:3001/api/interviews", 
+                { headers: { recruiterToken: token } }
+            );
+            setInterviews(response.data);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to fetch interviews");
+        }
+    };
+
+    const handleInterviewFormChange = (e) => {
+        const { name, value } = e.target;
+        setInterviewForm(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+
     useEffect(() => {
         fetchPostedJobs();
         fetchJobApplications();
+        fetchAppliedResumes();
+        fetchInterviews();
     }, []);
 
     return (
@@ -300,7 +437,162 @@ const RecruiterDashboard = () => {
                                 >
                                     Reject
                                 </button>
+                                <div>
+                                {/* View and download resume button */}
+                                {appliedResumes.find(resume => resume.studentID === application.studentID) && (
+                                    <button
+                                        onClick={() => {
+                                            const resume = appliedResumes.find(r => r.studentID === application.studentID);
+                                            viewResume(resume._id);
+                                        }}
+                                    >
+                                        View Resume
+                                    </button>
+                                )}
+                                {appliedResumes.find(resume => resume.studentID === application.studentID) && (
+                                    <button
+                                        onClick={() => {
+                                            const resume = appliedResumes.find(r => r.studentID === application.studentID);
+                                            downloadResume(resume._id);
+                                        }}
+                                    >
+                                        Download Resume
+                                    </button>
+                                )}
+                                </div>
                             </div>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Interview Scheduling Section for Shortlisted Applications */}
+            <div>
+                <h2>Schedule Interview</h2>
+                <form onSubmit={scheduleInterview}>
+                    <div>
+                        <label>Shortlisted Application</label>
+                        <select
+                            name="applicationID"
+                            value={interviewForm.applicationID}
+                            onChange={handleInterviewFormChange}
+                            required
+                        >
+                            <option value="">Select Shortlisted Application</option>
+                            {shortListedApplications.map((app, index) => (
+                                <option key={index} value={app.applicationID}>
+                                    {app.name} - {app.applicationID} - {app.jobTitle}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Interview Date</label>
+                        <input
+                            type="date"
+                            name="interviewDate"
+                            value={interviewForm.interviewDate}
+                            onChange={handleInterviewFormChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>Interview Time</label>
+                        <input
+                            type="time"
+                            name="interviewTime"
+                            value={interviewForm.interviewTime}
+                            onChange={handleInterviewFormChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>Interview Mode</label>
+                        <select
+                            name="interviewMode"
+                            value={interviewForm.interviewMode}
+                            onChange={handleInterviewFormChange}
+                            required
+                        >
+                            <option value="">Select Interview Mode</option>
+                            <option value="Online">Online</option>
+                            <option value="Offline">Offline</option>
+                        </select>
+                    </div>
+                    {interviewForm.interviewMode === 'Online' && (
+                        <div>
+                            <label>Interview Link</label>
+                            <input
+                                type="url"
+                                name="interviewLink"
+                                placeholder="Video Call Link"
+                                value={interviewForm.interviewLink}
+                                onChange={handleInterviewFormChange}
+                                required
+                            />
+                        </div>
+                    )}
+                    <button type="submit">Schedule Interview</button>
+                </form>
+            </div>
+
+            {/* Scheduled Interviews Section */}
+            <div>
+                <h2>Scheduled Interviews</h2>
+                {interviews.length === 0 ? (
+                    <p>No interviews scheduled</p>
+                ) : (
+                    interviews.map((interview, index) => (
+                        <div key={index}>
+                            <h3>Interview for {interview.jobTitle}</h3>
+                            <p>Candidate: {interview.name}</p>
+                            <p>Date: {new Date(interview.interviewDate).toLocaleDateString()}</p>
+                            <p>Time: {interview.interviewTime}</p>
+                            <p>Mode: {interview.interviewMode}</p>
+                            {interview.interviewLink && (
+                                <p>
+                                    Interview Link: 
+                                    <a href={interview.interviewLink} target="_blank" rel="noopener noreferrer">
+                                        Join Interview
+                                    </a>
+                                </p>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Shortlisted Applications Section */}
+            <div>
+                <h2>ShortListed Applications</h2>
+                {shortListedApplications.length === 0 ? (
+                    <p>No shortlisted applications</p>
+                ) : (
+                    shortListedApplications.map((application, index) => (
+                        <div key={index}>
+                            <h3>ShortListed Application for {application.jobTitle}</h3>
+                            <p>Application ID: {application.applicationID}</p>
+                            <p>Student Name: {application.name}</p>
+                            <p>Student ID: {application.studentID}</p>
+                            <p>Job ID: {application.jobID}</p>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Rejected Applications Section */}
+            <div>
+                <h2>Rejected Applications</h2>
+                {rejectedApplications.length === 0 ? (
+                    <p>No rejected applications</p>
+                ) : (
+                    rejectedApplications.map((application, index) => (
+                        <div key={index}>
+                            <h3>Rejected Application for {application.jobTitle}</h3>
+                            <p>Application ID: {application.applicationID}</p>
+                            <p>Student Name: {application.name}</p>
+                            <p>Student ID: {application.studentID}</p>
+                            <p>Job ID: {application.jobID}</p>
                         </div>
                     ))
                 )}
