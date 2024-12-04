@@ -9,9 +9,11 @@ import RecruiterProfile from "./components/Recruiter/RecruiterProfile";
 import RecruiterDashboard from "./components/Recruiter/RecruiterDashboard";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import UserProfile from "./components/User/UserProfile";
+import {NextUIProvider} from "@nextui-org/react";
 
 const App = () => {
     return(
+        <NextUIProvider>
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -25,6 +27,7 @@ const App = () => {
                 <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
             </Routes>
         </Router>
+        </NextUIProvider>
     )
 };
 
