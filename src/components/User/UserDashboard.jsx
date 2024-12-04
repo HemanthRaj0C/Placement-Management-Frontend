@@ -1,6 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { 
+  Card, 
+  CardHeader, 
+  CardBody, 
+  CardFooter,
+  Button, 
+  Select, 
+  SelectItem,
+  Divider,
+  Chip
+} from "@nextui-org/react";
+import { 
+  FaUser, 
+  FaSignOutAlt, 
+  FaBriefcase, 
+  FaFilter 
+} from "react-icons/fa";
 
 const UserDashboard = () => {
     const [applications, setApplications] = useState([]);
@@ -97,111 +114,183 @@ const UserDashboard = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Welcome to User Dashboard</h1>
-            <div>
-                <button onClick={() => navigate("/user/profile")}>Go to Profile</button>
-            </div>
+        <div className="bg-gray-900 min-h-screen p-6 text-white">
+            <Card className="max-w-6xl mx-auto bg-blue-950 border border-blue-500/20 text-white">
+                <CardHeader className="flex justify-between items-center bg-blue-900/50 py-4 px-6">
+                    <div className="flex items-center gap-3">
+                        <FaUser className="text-2xl text-cyan-400" />
+                        <h1 className="text-2xl font-semibold">User Dashboard</h1>
+                    </div>
+                    <div className="flex gap-4">
+                        <Button 
+                            color="primary" 
+                            variant="bordered" 
+                            onClick={() => navigate("/user/profile")}
+                            startContent={<FaUser />}
+                        >
+                            Profile
+                        </Button>
+                        <Button 
+                            color="danger" 
+                            variant="solid" 
+                            onClick={handleLogout}
+                            startContent={<FaSignOutAlt />}
+                        >
+                            Logout
+                        </Button>
+                    </div>
+                </CardHeader>
 
-            <div>
-                <label>Filter by Job Role: </label>
-                <select 
-                    value={selectedJobRole} 
-                    onChange={(e) => handleJobRoleFilter(e.target.value)}
-                >
-                    <option value="">All Roles</option>
-                    {getUniqueJobRoles().map((role, index) => (
-                        <option key={index} value={role}>{role}</option>
-                    ))}
-                </select>
-            </div>
+                <Divider className="bg-blue-500/20" />
 
-            <div>
-                <h2>Available Jobs {selectedJobRole && `(${selectedJobRole})`}</h2>
-                <div>
-                    {filteredApplications.map((job, index) => {
-                        const isApplied = isJobApplied(job.jobID);
-                        return (
-                            <div key={index}>
-                                <h3>JobID: {job.jobID}</h3>
-                                <p>Title: {job.jobTitle}</p>
-                                <p>Company Name: {job.companyName}</p>
-                                <p>Description: {job.jobDescription}</p>
-                                <p>Location: {job.jobLocation}</p>
-                                <p>Location Type: {job.jobLocationType}</p>
-                                <p>Role: {job.jobRole}</p>
-                                <p>Type: {job.jobType}</p>
-                                <p>Eligibility Criteria: {job.eligibilityCriteria}</p>
-                                <p>Cost to Company: {job.ctc}</p>
-                                <p>Created At: {new Date(job.createdAt).toLocaleDateString()}</p>
-                                <p>Last Date: {new Date(job.lastDateToApply).toLocaleDateString()}</p>
-                                <p>{job.salary}</p>
-                                <button 
-                                    onClick={() => applyJob(job.jobID)}
-                                    disabled={isApplied}
-                                    style={{
-                                        backgroundColor: isApplied ? 'gray' : '',
-                                        cursor: isApplied ? 'not-allowed' : 'pointer'
-                                    }}
+                <CardBody className="space-y-6 p-6">
+                    {/* Job Filtering Section */}
+                    <Card className="bg-blue-900/50 border border-blue-500/">
+                        <CardHeader className="flex items-center gap-2">
+                            <FaFilter className="text-cyan-400" />
+                            <h2 className="font-semibold text-white">Filter Jobs</h2>
+                        </CardHeader>
+                        <CardBody>
+                            <Select
+                                label="Filter by Job Role"
+                                variant="bordered"
+                                color="primary"
+                                selectedKeys={new Set([selectedJobRole])}
+                                onSelectionChange={(keys) => handleJobRoleFilter(Array.from(keys)[0])}
+                                className="max-w-xs text-white"
+                            >
+                                <SelectItem key="" textValue="All Roles">
+                                    All Roles
+                                </SelectItem>
+                                {getUniqueJobRoles().map((role) => (
+                                    <SelectItem key={role} textValue={role}>
+                                        {role}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                        </CardBody>
+                    </Card>
+
+                    {/* Available Jobs Section */}
+                    <Card className="bg-blue-900/50 border border-blue-500/20">
+                        <CardHeader className="flex items-center gap-2">
+                            <FaBriefcase className="text-cyan-400" />
+                            <h2 className="font-semibold text-white">
+                                Available Jobs {selectedJobRole && `(${selectedJobRole})`}
+                            </h2>
+                        </CardHeader>
+                        <CardBody className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {filteredApplications.map((job) => (
+                                <Card 
+                                    key={job.jobID} 
+                                    className="bg-blue-950 border border-blue-500/20"
                                 >
-                                    {isApplied ? 'Applied' : 'Apply'}
-                                </button>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
+                                    <CardBody className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-cyan-400">{job.jobTitle}</h3>
+                                            <Chip 
+                                                color="primary" 
+                                                size="sm" 
+                                                variant="solid" 
+                                                className="bg-cyan-600/50"
+                                            >
+                                                {job.jobRole}
+                                            </Chip>
+                                        </div>
+                                        <p><strong>Company:</strong> {job.companyName}</p>
+                                        <p><strong>Location:</strong> {job.jobLocation}</p>
+                                        <p><strong>CTC:</strong> {job.ctc}</p>
+                                        <Button
+                                            color="primary"
+                                            variant="solid"
+                                            fullWidth
+                                            onClick={() => applyJob(job.jobID)}
+                                            isDisabled={isJobApplied(job.jobID)}
+                                        >
+                                            {isJobApplied(job.jobID) ? 'Applied' : 'Apply'}
+                                        </Button>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </CardBody>
+                    </Card>
 
-            <div>
-                <h2>Applied Jobs</h2>
-                <div>
-                    {appliedJobs.map((job, index) => {
-                        return (
-                            <div key={index}>
-                                <h3>Job ID: {job.jobID}</h3>
-                                <p>Application ID: {job.applicationID}</p>
-                                <p>Student ID: {job.studentID}</p>
-                                <p>Name: {job.name}</p>
-                                <p>Job Title: {job.jobTitle}</p>
-                                <p>Company Name: {job.companyName}</p>
-                                <p>Application Status: {job.applicationStatus}</p>
-                                <p>Created At: {new Date(job.createdAt).toLocaleDateString()}</p>
-                                <p>Updated At: {new  Date(job.updatedAt).toLocaleDateString()}</p>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
+                    {/* Applied Jobs Section */}
+                    <Card className="bg-blue-900/50 border border-blue-500/20">
+                        <CardHeader>
+                            <h2 className="font-semibold text-cyan-400">Applied Jobs</h2>
+                        </CardHeader>
+                        <CardBody className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {appliedJobs.map((job) => (
+                                <Card 
+                                    key={job.applicationID} 
+                                    className="bg-blue-950 border border-blue-500/20"
+                                >
+                                    <CardBody className="space-y-2">
+                                        <h3 className="font-bold text-cyan-400">{job.jobTitle}</h3>
+                                        <p><strong>Company:</strong> {job.companyName}</p>
+                                        <Chip 
+                                            color="success" 
+                                            size="sm" 
+                                            variant="solid"
+                                        >
+                                            {job.applicationStatus}
+                                        </Chip>
+                                        <p>Applied on: {new Date(job.createdAt).toLocaleDateString()}</p>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </CardBody>
+                    </Card>
 
-                {/* Scheduled Interviews Section */}
-            <div>
-                <h2>Your Scheduled Interviews</h2>
-                {scheduledInterviews.length === 0 ? (
-                    <p>No interviews scheduled</p>
-                ) : (
-                    scheduledInterviews.map((interview, index) => (
-                        <div key={index}>
-                            <h3>Interview for {interview.jobTitle}</h3>
-                            <p>Company: {interview.companyName}</p>
-                            <p>Date: {new Date(interview.interviewDate).toLocaleDateString()}</p>
-                            <p>Time: {interview.interviewTime}</p>
-                            <p>Mode: {interview.interviewMode}</p>
-                            {interview.interviewLink && (
-                                <p>
-                                    Interview Link: 
-                                    <a href={interview.interviewLink} target="_blank" rel="noopener noreferrer">
-                                        Join Interview
-                                    </a>
-                                </p>
+                    {/* Scheduled Interviews Section */}
+                    <Card className="bg-blue-900/50 border border-blue-500/20">
+                        <CardHeader>
+                            <h2 className="font-semibold text-cyan-400">Scheduled Interviews</h2>
+                        </CardHeader>
+                        <CardBody>
+                            {scheduledInterviews.length === 0 ? (
+                                <p className="text-gray-400">No interviews scheduled</p>
+                            ) : (
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {scheduledInterviews.map((interview) => (
+                                        <Card 
+                                            key={interview.jobTitle} 
+                                            className="bg-blue-950 border border-blue-500/20"
+                                        >
+                                            <CardBody className="space-y-2">
+                                                <h3 className="font-bold text-cyan-400">{interview.jobTitle}</h3>
+                                                <p><strong>Company:</strong> {interview.companyName}</p>
+                                                <p><strong>Date:</strong> {new Date(interview.interviewDate).toLocaleDateString()}</p>
+                                                <p><strong>Time:</strong> {interview.interviewTime}</p>
+                                                <Chip 
+                                                    color="warning" 
+                                                    size="sm" 
+                                                    variant="solid"
+                                                >
+                                                    {interview.interviewMode}
+                                                </Chip>
+                                                {interview.interviewLink && (
+                                                    <Button
+                                                        as="a"
+                                                        href={interview.interviewLink}
+                                                        target="_blank"
+                                                        color="primary"
+                                                        variant="solid"
+                                                        fullWidth
+                                                    >
+                                                        Join Interview
+                                                    </Button>
+                                                )}
+                                            </CardBody>
+                                        </Card>
+                                    ))}
+                                </div>
                             )}
-                            <p>Application Status: {interview.applicationStatus}</p>
-                        </div>
-                    ))
-                )}
-            </div>
-            <div>
-                <button onClick={handleLogout}>Logout</button>
-            </div>
+                        </CardBody>
+                    </Card>
+                </CardBody>
+            </Card>
         </div>
     )
 };

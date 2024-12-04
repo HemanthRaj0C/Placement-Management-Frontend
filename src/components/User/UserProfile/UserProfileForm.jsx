@@ -1,160 +1,250 @@
 import React from 'react';
+import { 
+  Card, 
+  CardHeader, 
+  CardBody, 
+  Divider, 
+  Input, 
+  Select, 
+  SelectItem,
+  Button
+} from "@nextui-org/react";
+import { 
+  FaUser, 
+  FaUserTie,
+  FaBook,
+  FaBriefcase,
+  FaCode,
+  FaLink,
+  FaEnvelope, 
+  FaPhoneAlt, 
+  FaGraduationCap, 
+  FaPlus, 
+  FaTrash, 
+  FaUserEdit
+} from "react-icons/fa";
 
-const UserProfileForm = ({ 
-    formData, 
-    handleInputChange, 
-    handleSkillChange, 
-    handleProjectLinkChange, 
-    addProjectLink, 
-    handleSubmit, 
-    newUser,
-    setIsEditMode 
+const ProfileCreationForm = ({
+    initialFormData,
+    formData,
+    handleInputChange,
+    handleSkillChange,
+    handleProjectLinkChange,
+    addProjectLink,
+    handleSubmit,
+    onCancel,
+    isEditMode = false,
+    newUser = false
 }) => {
+    const handleProjectLinkRemove = (index) => {
+        const newProjectLinks = formData.projectLinks.filter((_, i) => i !== index);
+        handleProjectLinkChange(newProjectLinks.map((link, i) => ({ target: { name: `projectLinks[${i}]`, value: link } })));
+    };
+
     return (
-        <>
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>First Name</label>
-                <input 
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Last Name</label>
-                <input 
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Email</label>
-                <input 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    type="email"
-                    required
-                />
-            </div>
-            <div>
-                <label>Mobile Number</label>
-                <input 
-                    name="mobileNumber"
-                    value={formData.mobileNumber}
-                    onChange={handleInputChange}
-                    type="tel"
-                    required
-                />
-            </div>
-            <div>
-                <label>Degree</label>
-                <select 
-                    name="degree"
-                    value={formData.degree}
-                    onChange={handleInputChange}
-                    required
-                >
-                    <option value="">Select Degree</option>
-                    <option value="B.E">B.E</option>
-                    <option value="B.Tech">B.Tech</option>
-                    <option value="M.E">M.E</option>
-                    <option value="PhD">PhD</option>
-                </select>
-            </div>
-            <div>
-                <label>Degree Status</label>
-                <select 
-                    name="degreeStatus"
-                    value={formData.degreeStatus}
-                    onChange={handleInputChange}
-                    required
-                >
-                    <option value="">Select Status</option>
-                    <option value="Pursuing">Pursuing</option>
-                    <option value="Completed">Completed</option>
-                </select>
-            </div>
-            <div>
-                <label>Highest Qualification</label>
-                <select 
-                    name="highestQualification"
-                    value={formData.highestQualification}
-                    onChange={handleInputChange}
-                    required
-                >
-                    <option value="">Select Qualification</option>
-                    <option value="Higher Secondary">Higher Secondary</option>
-                    <option value="Diploma">Diploma</option>
-                    <option value="Under Graduation">Under Graduation</option>
-                    <option value="Post Graduation">Post Graduation</option>
-                    <option value="PhD">PhD</option>
-                </select>
-            </div>
-            <div>
-                <label>Experience (Years)</label>
-                <select 
-                    name="experience"
-                    value={formData.experience}
-                    onChange={handleInputChange}
-                    required
-                >
-                    <option value="">Select Experience</option>
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-            </div>
-            <div>
-                <label>Technical Skills (comma-separated)</label>
-                <input 
-                    value={formData.technicalSkills.join(', ')}
-                    onChange={(e) => handleSkillChange('technicalSkills', e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label>Other Skills (comma-separated)</label>
-                <input 
-                    value={formData.otherSkills.join(', ')}
-                    onChange={(e) => handleSkillChange('otherSkills', e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Project Links</label>
-                {formData.projectLinks.map((link, index) => (
-                    <div key={index}>
-                        <input 
-                            value={link}
-                            onChange={(e) => handleProjectLinkChange(index, e.target.value)}
-                            placeholder="Enter project link"
+        <Card className="bg-blue-950 text-white border border-blue-500/20 max-w-full mx-auto">
+            <CardHeader className="flex justify-between items-center bg-blue-900/50 py-4 px-6">
+                <div className="flex gap-3 items-center">
+                    <FaUserEdit className="text-2xl text-cyan-400" />
+                    <h2 className="text-xl font-semibold">
+                        {isEditMode ? 'Edit Profile' : 'Create Profile'}
+                    </h2>
+                </div>
+            </CardHeader>
+            <Divider className="bg-blue-500/20" />
+            <CardBody className="p-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <Input
+                            label="First Name"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleInputChange}
+                            variant="bordered"
+                            color="primary"
+                            startContent={<FaUserTie className="text-cyan-400" />}
+                            required
+                        />
+                        <Input
+                            label="Last Name"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleInputChange}
+                            variant="bordered"
+                            color="primary"
+                            startContent={<FaUser className="text-cyan-400" />}
+                            required
+                        />
+                        <Input
+                            label="Email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            variant="bordered"
+                            color="primary"
+                            startContent={<FaEnvelope className="text-cyan-400" />}
+                            required
+                        />
+                        <Input
+                            label="Mobile Number"
+                            name="mobileNumber"
+                            type="tel"
+                            value={formData.mobileNumber}
+                            onChange={handleInputChange}
+                            variant="bordered"
+                            color="primary"
+                            startContent={<FaPhoneAlt className="text-cyan-400" />}
+                            required
                         />
                     </div>
-                ))}
-                <button type="button" onClick={addProjectLink}>
-                    Add Project Link
-                </button>
-            </div>
-            <div>
-                <button type="submit">
-                    {newUser ? "Create Profile" : "Save Profile"}
-                </button>
-                {!newUser && (
-                    <button type="button" onClick={() => setIsEditMode(false)}>
-                        Cancel
-                    </button>
-                )}
-            </div>
-        </form>
-        </>
+
+                    <Divider className="bg-blue-500/20 my-4" />
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <Select
+                            label="Degree"
+                            name="degree"
+                            variant="bordered"
+                            color="primary"
+                            startContent={<FaGraduationCap className="text-cyan-400" />}
+                            selectedKeys={formData.degree ? [formData.degree] : []}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            {['B.E', 'B.Tech', 'M.E', 'PhD'].map((degree) => (
+                                <SelectItem key={degree} value={degree}>
+                                    {degree}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            label="Degree Status"
+                            name="degreeStatus"
+                            variant="bordered"
+                            color="primary"
+                            startContent={<FaGraduationCap className="text-cyan-400" />}
+                            selectedKeys={formData.degreeStatus ? [formData.degreeStatus] : []}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            {['Pursuing', 'Completed'].map((status) => (
+                                <SelectItem key={status} value={status}>
+                                    {status}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            label="Highest Qualification"
+                            name="highestQualification"
+                            variant="bordered"
+                            startContent={<FaBook className="text-cyan-400" />}
+                            color="primary"
+                            selectedKeys={formData.highestQualification ? [formData.highestQualification] : []}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            {['Higher Secondary', 'Diploma', 'Under Graduation', 'Post Graduation', 'PhD'].map((qual) => (
+                                <SelectItem key={qual} value={qual}>
+                                    {qual}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            label="Experience (Years)"
+                            name="experience"
+                            variant="bordered"
+                            startContent={<FaBriefcase className="text-cyan-400" />}
+                            color="primary"
+                            selectedKeys={formData.experience ? [formData.experience] : []}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            {['0', '1', '2', '3', '4', '5'].map((exp) => (
+                                <SelectItem key={exp} value={exp}>
+                                    {exp}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                    </div>
+
+                    <Divider className="bg-blue-500/20 my-4" />
+
+                    <Input
+                        label="Technical Skills (comma-separated)"
+                        value={formData.technicalSkills.join(', ')}
+                        onChange={(e) => handleSkillChange('technicalSkills', e.target.value)}
+                        startContent={<FaCode className="text-cyan-400" />}
+                        variant="bordered"
+                        color="primary"
+                        required
+                    />
+
+                    <Input
+                        label="Other Skills (comma-separated)"
+                        value={formData.otherSkills.join(', ')}
+                        onChange={(e) => handleSkillChange('otherSkills', e.target.value)}
+                        startContent={<FaCode className="text-cyan-400" />}
+                        variant="bordered"
+                        color="primary"
+                    />
+
+                    <div className="space-y-2">
+                        <label className="text-white">Project Links</label>
+                        {formData.projectLinks.map((link, index) => (
+                            <div key={index} className="flex gap-2 items-center">
+                                <Input
+                                    value={link}
+                                    onChange={(e) => handleProjectLinkChange(index, e.target.value)}
+                                    startContent={<FaLink className="text-cyan-400" />}
+                                    placeholder="Enter project link"
+                                    variant="bordered"
+                                    color="primary"
+                                    className="flex-grow"
+                                />
+                                {index === formData.projectLinks.length - 1 && (
+                                    <Button 
+                                        isIconOnly 
+                                        color="primary" 
+                                        variant="light" 
+                                        onClick={addProjectLink}
+                                    >
+                                        <FaPlus />
+                                    </Button>
+                                )}
+                                {formData.projectLinks.length > 1 && (
+                                    <Button 
+                                        isIconOnly 
+                                        color="danger" 
+                                        variant="light" 
+                                        onClick={() => handleProjectLinkRemove(index)}
+                                    >
+                                        <FaTrash />
+                                    </Button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex justify-end gap-2 mt-6">
+                        <Button 
+                            color="default" 
+                            variant="bordered" 
+                            onClick={onCancel}
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            color="primary" 
+                            type="submit"
+                        >
+                            {isEditMode ? 'Update Profile' : 'Create Profile'}
+                        </Button>
+                    </div>
+                </form>
+            </CardBody>
+        </Card>
     );
 };
 
-export default UserProfileForm;
+export default ProfileCreationForm;

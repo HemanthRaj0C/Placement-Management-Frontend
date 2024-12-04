@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+    Card,
+    CardHeader,
+    CardBody,
+    Divider,
+    Button,
+    Spacer,
+    Input,
+    Textarea,
+    Select,
+    SelectItem,
+  } from "@nextui-org/react";
 
 const RecruiterDashboard = () => {
     const [jobData, setJobData] = useState({
@@ -257,350 +269,300 @@ const RecruiterDashboard = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Recruiter Dashboard</h1>
-
-            {/* Job Posting Section */}
-            <div>
-                <h2>Post a New Job</h2>
-                <form onSubmit={handlePostJob}>
-                    <div>
-                        <label>Job ID</label>
-                        <input 
-                            type="text"
-                            name="jobID"
-                            placeholder="Unique Job ID"
-                            value={jobData.jobID}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Company Name</label>
-                        <input 
-                            type="text"
-                            name="companyName"
-                            placeholder="Company Name"
-                            value={jobData.companyName}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Job Title</label>
-                        <input 
-                            type="text"
-                            name="jobTitle"
-                            placeholder="Job Title"
-                            value={jobData.jobTitle}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Job Description</label>
-                        <textarea 
-                            name="jobDescription"
-                            placeholder="Job Description"
-                            value={jobData.jobDescription}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Job Location</label>
-                        <input 
-                            type="text"
-                            name="jobLocation"
-                            placeholder="Job Location"
-                            value={jobData.jobLocation}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Location Type</label>
-                        <select 
-                            name="jobLocationType"
-                            value={jobData.jobLocationType}
-                            onChange={handleJobDataChange}
-                        >
-                            <option value="" disabled>Select Job Location</option>
-                            <option value="On-Site">On-Site</option>
-                            <option value="Remote">Remote</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Job Role</label>
-                        <input 
-                            type="text"
-                            name="jobRole"
-                            placeholder="Job Role"
-                            value={jobData.jobRole}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Job Type</label>
-                        <select 
-                            name="jobType"
-                            value={jobData.jobType}
-                            onChange={handleJobDataChange}
-                        >
-                            <option value="" disabled>Select Job Type</option>
-                            <option value="Full Time">Full Time</option>
-                            <option value="Part Time">Part Time</option>
-                            <option value="Internship">Internship</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Eligibility Criteria</label>
-                        <input 
-                            type="text"
-                            name="eligibilityCriteria"
-                            placeholder="Eligibility Criteria"
-                            value={jobData.eligibilityCriteria}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Cost to Company (CTC)</label>
-                        <input 
-                            type="text"
-                            name="ctc"
-                            placeholder="Cost to Company"
-                            value={jobData.ctc}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Last Date to Apply</label>
-                        <input 
-                            type="date"
-                            name="lastDateToApply"
-                            value={jobData.lastDateToApply}
-                            onChange={handleJobDataChange}
-                            required
-                        />
-                    </div>
-                    <button type="submit">Post Job</button>
+        <div className="flex justify-center items-center min-h-screen flex-col space-y-10 py-20 bg-gray-900 text-white">
+            {/* Post a New Job Section */}
+            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
+                <h1 className="text-2xl font-bold text-white">Recruiter Dashboard</h1>
+                </CardHeader>
+                <Divider className="bg-amber-500/20" />
+                <CardBody className="p-6">
+                <h2 className="text-xl font-semibold mb-4 text-white">Post a New Job</h2>
+                <form onSubmit={handlePostJob} className="space-y-4">
+                    <Input
+                    label="Job ID"
+                    name="jobID"
+                    placeholder="Unique Job ID"
+                    value={jobData.jobID}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Input
+                    label="Company Name"
+                    name="companyName"
+                    placeholder="Company Name"
+                    value={jobData.companyName}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Input
+                    label="Job Title"
+                    name="jobTitle"
+                    placeholder="Job Title"
+                    value={jobData.jobTitle}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Textarea
+                    label="Job Description"
+                    name="jobDescription"
+                    placeholder="Job Description"
+                    value={jobData.jobDescription}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Input
+                    label="Job Location"
+                    name="jobLocation"
+                    placeholder="Job Location"
+                    value={jobData.jobLocation}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Select
+                    label="Location Type"
+                    name="jobLocationType"
+                    value={jobData.jobLocationType}
+                    onChange={(value) => handleJobDataChange({ target: { name: "jobLocationType", value } })}
+                    >
+                    <SelectItem value="On-Site">On-Site</SelectItem>
+                    <SelectItem value="Remote">Remote</SelectItem>
+                    </Select>
+                    <Input
+                    label="Job Role"
+                    name="jobRole"
+                    placeholder="Job Role"
+                    value={jobData.jobRole}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Select
+                    label="Job Type"
+                    name="jobType"
+                    value={jobData.jobType}
+                    onChange={(value) => handleJobDataChange({ target: { name: "jobType", value } })}
+                    >
+                    <SelectItem value="Full Time">Full Time</SelectItem>
+                    <SelectItem value="Part Time">Part Time</SelectItem>
+                    <SelectItem value="Internship">Internship</SelectItem>
+                    </Select>
+                    <Input
+                    label="Eligibility Criteria"
+                    name="eligibilityCriteria"
+                    placeholder="Eligibility Criteria"
+                    value={jobData.eligibilityCriteria}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Input
+                    label="Cost to Company (CTC)"
+                    name="ctc"
+                    placeholder="Cost to Company"
+                    value={jobData.ctc}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Input
+                    label="Last Date to Apply"
+                    name="lastDateToApply"
+                    type="date"
+                    value={jobData.lastDateToApply}
+                    onChange={handleJobDataChange}
+                    required
+                    fullWidth
+                    />
+                    <Button type="submit" color="primary" className="w-full">
+                    Post Job
+                    </Button>
                 </form>
-            </div>
-
+                <Spacer y={2} />
+                <Button onClick={() => navigate("/")} color="warning" auto>
+                    Logout
+                </Button>
+                </CardBody>
+            </Card>
             {/* Posted Jobs Section */}
-            <div>
-                <h2>Your Posted Jobs</h2>
-                {postedJobs.length === 0 ? (
-                    <p>No jobs posted yet</p>
-                ) : (
-                    postedJobs.map((job, index) => (
-                        <div key={index}>
-                            <h3>{job.jobTitle} at {job.companyName}</h3>
-                            <p>Job ID: {job.jobID}</p>
-                            <p>Job Role: {job.jobRole}</p>
-                            <p>Location: {job.jobLocation} ({job.jobLocationType})</p>
-                            <p>Job Type: {job.jobType}</p>
-                            <p>CTC: {job.ctc}</p>
-                            <p>Last Date to Apply: {new Date(job.lastDateToApply).toLocaleDateString()}</p>
-                        </div>
-                    ))
-                )}
-            </div>
+            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
+                    <h2 className="text-2xl font-bold text-white">Your Posted Jobs</h2>
+                </CardHeader>
+                <Divider className="bg-amber-500/20" />
+                <CardBody className="p-6">
+                    {postedJobs.length === 0 ? (
+                        <p className="text-white">No jobs posted yet</p>
+                    ) : (
+                        postedJobs.map((job, index) => (
+                            <div key={index} className="mb-6">
+                                <h3 className="text-xl text-white">{job.jobTitle} at {job.companyName}</h3>
+                                <p className="text-white">Job ID: {job.jobID}</p>
+                                <p className="text-white">Job Role: {job.jobRole}</p>
+                                <p className="text-white">Location: {job.jobLocation} ({job.jobLocationType})</p>
+                                <p className="text-white">Job Type: {job.jobType}</p>
+                                <p className="text-white">CTC: {job.ctc}</p>
+                                <p className="text-white">Last Date to Apply: {new Date(job.lastDateToApply).toLocaleDateString()}</p>
+                            </div>
+                        ))
+                    )}
+                </CardBody>
+            </Card>
 
             {/* Job Applications Section */}
-            <div>
-                <h2>Job Applications</h2>
-                {jobApplications.length === 0 ? (
-                    <p>No applications received</p>
-                ) : (
-                    jobApplications.map((application, index) => (
-                        <div key={index}>
-                            <h3>Application for {application.jobTitle}</h3>
-                            <p>Application ID: {application.applicationID}</p>
-                            <p>Student Name: {application.name}</p>
-                            <p>Student ID: {application.studentID}</p>
-                            <p>Job ID: {application.jobID}</p>
-                            <p>Current Status: {application.applicationStatus}</p>
-                            <div>
-                                <button 
-                                    onClick={() => updateApplicationStatus(application.applicationID, 'Shortlisted')}
-                                    disabled={application.applicationStatus === 'Shortlisted'}
-                                >
-                                    Shortlist
-                                </button>
-                                <button 
-                                    onClick={() => updateApplicationStatus(application.applicationID, 'Rejected')}
-                                    disabled={application.applicationStatus === 'Rejected'}
-                                >
-                                    Reject
-                                </button>
-                                <div>
-                                {/* View and download resume button */}
-                                {appliedResumes.find(resume => resume.studentID === application.studentID) && (
-                                    <button
-                                        onClick={() => {
-                                            const resume = appliedResumes.find(r => r.studentID === application.studentID);
-                                            viewResume(resume._id);
-                                        }}
+            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20 mt-8">
+                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
+                    <h2 className="text-2xl font-bold text-white">Job Applications</h2>
+                </CardHeader>
+                <Divider className="bg-amber-500/20" />
+                <CardBody className="p-6">
+                    {jobApplications.length === 0 ? (
+                        <p className="text-white">No applications received</p>
+                    ) : (
+                        jobApplications.map((application, index) => (
+                            <div key={index} className="mb-6">
+                                <h3 className="text-xl text-white">Application for {application.jobTitle}</h3>
+                                <p className="text-white">Application ID: {application.applicationID}</p>
+                                <p className="text-white">Student Name: {application.name}</p>
+                                <p className="text-white">Student ID: {application.studentID}</p>
+                                <p className="text-white">Job ID: {application.jobID}</p>
+                                <p className="text-white">Current Status: {application.applicationStatus}</p>
+                                <div className="flex space-x-4 mt-4">
+                                    <Button
+                                        onClick={() => updateApplicationStatus(application.applicationID, 'Shortlisted')}
+                                        disabled={application.applicationStatus === 'Shortlisted'}
+                                        color="warning"
                                     >
-                                        View Resume
-                                    </button>
-                                )}
-                                {appliedResumes.find(resume => resume.studentID === application.studentID) && (
-                                    <button
-                                        onClick={() => {
-                                            const resume = appliedResumes.find(r => r.studentID === application.studentID);
-                                            downloadResume(resume._id);
-                                        }}
+                                        Shortlist
+                                    </Button>
+                                    <Button
+                                        onClick={() => updateApplicationStatus(application.applicationID, 'Rejected')}
+                                        disabled={application.applicationStatus === 'Rejected'}
+                                        color="error"
                                     >
-                                        Download Resume
-                                    </button>
-                                )}
+                                        Reject
+                                    </Button>
+                                    {appliedResumes.find(resume => resume.studentID === application.studentID) && (
+                                        <>
+                                            <Button
+                                                onClick={() => {
+                                                    const resume = appliedResumes.find(r => r.studentID === application.studentID);
+                                                    viewResume(resume._id);
+                                                }}
+                                                color="primary"
+                                            >
+                                                View Resume
+                                            </Button>
+                                            <Button
+                                                onClick={() => {
+                                                    const resume = appliedResumes.find(r => r.studentID === application.studentID);
+                                                    downloadResume(resume._id);
+                                                }}
+                                                color="secondary"
+                                            >
+                                                Download Resume
+                                            </Button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
-                        </div>
-                    ))
-                )}
-            </div>
+                        ))
+                    )}
+                </CardBody>
+            </Card>
 
-            {/* Interview Scheduling Section for Shortlisted Applications */}
-            <div>
-                <h2>Schedule Interview</h2>
-                <form onSubmit={scheduleInterview}>
-                    <div>
-                        <label>Shortlisted Application</label>
-                        <select
-                            name="applicationID"
-                            value={interviewForm.applicationID}
-                            onChange={handleInterviewFormChange}
-                            required
-                        >
-                            <option value="">Select Shortlisted Application</option>
-                            {shortListedApplications.map((app, index) => (
-                                <option key={index} value={app.applicationID}>
-                                    {app.name} - {app.applicationID} - {app.jobTitle}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label>Interview Date</label>
-                        <input
-                            type="date"
-                            name="interviewDate"
-                            value={interviewForm.interviewDate}
-                            onChange={handleInterviewFormChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Interview Time</label>
-                        <input
-                            type="time"
-                            name="interviewTime"
-                            value={interviewForm.interviewTime}
-                            onChange={handleInterviewFormChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Interview Mode</label>
-                        <select
-                            name="interviewMode"
-                            value={interviewForm.interviewMode}
-                            onChange={handleInterviewFormChange}
-                            required
-                        >
-                            <option value="">Select Interview Mode</option>
-                            <option value="Online">Online</option>
-                            <option value="Offline">Offline</option>
-                        </select>
-                    </div>
-                    {interviewForm.interviewMode === 'Online' && (
+            {/* Interview Scheduling Section */}
+            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20 mt-8">
+                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
+                    <h2 className="text-2xl font-bold text-white">Schedule Interview</h2>
+                </CardHeader>
+                <Divider className="bg-amber-500/20" />
+                <CardBody className="p-6">
+                    <form onSubmit={scheduleInterview} className="space-y-4">
                         <div>
-                            <label>Interview Link</label>
-                            <input
-                                type="url"
-                                name="interviewLink"
-                                placeholder="Video Call Link"
-                                value={interviewForm.interviewLink}
+                            <label className="text-white">Shortlisted Application</label>
+                            <select
+                                name="applicationID"
+                                value={interviewForm.applicationID}
                                 onChange={handleInterviewFormChange}
+                                className="bg-amber-900 text-white p-2 rounded w-full"
+                                required
+                            >
+                                <option value="">Select Shortlisted Application</option>
+                                {shortListedApplications.map((app, index) => (
+                                    <option key={index} value={app.applicationID}>
+                                        {app.name} - {app.applicationID} - {app.jobTitle}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-white">Interview Date</label>
+                            <input
+                                type="date"
+                                name="interviewDate"
+                                value={interviewForm.interviewDate}
+                                onChange={handleInterviewFormChange}
+                                className="bg-amber-900 text-white p-2 rounded w-full"
                                 required
                             />
                         </div>
-                    )}
-                    <button type="submit">Schedule Interview</button>
-                </form>
-            </div>
-
-            {/* Scheduled Interviews Section */}
-            <div>
-                <h2>Scheduled Interviews</h2>
-                {interviews.length === 0 ? (
-                    <p>No interviews scheduled</p>
-                ) : (
-                    interviews.map((interview, index) => (
-                        <div key={index}>
-                            <h3>Interview for {interview.jobTitle}</h3>
-                            <p>Candidate: {interview.name}</p>
-                            <p>Date: {new Date(interview.interviewDate).toLocaleDateString()}</p>
-                            <p>Time: {interview.interviewTime}</p>
-                            <p>Mode: {interview.interviewMode}</p>
-                            {interview.interviewLink && (
-                                <p>
-                                    Interview Link: 
-                                    <a href={interview.interviewLink} target="_blank" rel="noopener noreferrer">
-                                        Join Interview
-                                    </a>
-                                </p>
-                            )}
+                        <div>
+                            <label className="text-white">Interview Time</label>
+                            <input
+                                type="time"
+                                name="interviewTime"
+                                value={interviewForm.interviewTime}
+                                onChange={handleInterviewFormChange}
+                                className="bg-amber-900 text-white p-2 rounded w-full"
+                                required
+                            />
                         </div>
-                    ))
-                )}
-            </div>
-
-            {/* Shortlisted Applications Section */}
-            <div>
-                <h2>ShortListed Applications</h2>
-                {shortListedApplications.length === 0 ? (
-                    <p>No shortlisted applications</p>
-                ) : (
-                    shortListedApplications.map((application, index) => (
-                        <div key={index}>
-                            <h3>ShortListed Application for {application.jobTitle}</h3>
-                            <p>Application ID: {application.applicationID}</p>
-                            <p>Student Name: {application.name}</p>
-                            <p>Student ID: {application.studentID}</p>
-                            <p>Job ID: {application.jobID}</p>
+                        <div>
+                            <label className="text-white">Interview Mode</label>
+                            <select
+                                name="interviewMode"
+                                value={interviewForm.interviewMode}
+                                onChange={handleInterviewFormChange}
+                                className="bg-amber-900 text-white p-2 rounded w-full"
+                                required
+                            >
+                                <option value="">Select Interview Mode</option>
+                                <option value="Online">Online</option>
+                                <option value="Offline">Offline</option>
+                            </select>
                         </div>
-                    ))
-                )}
-            </div>
+                        {interviewForm.interviewMode === 'Online' && (
+                            <div>
+                                <label className="text-white">Interview Link</label>
+                                <input
+                                    type="url"
+                                    name="interviewLink"
+                                    placeholder="Video Call Link"
+                                    value={interviewForm.interviewLink}
+                                    onChange={handleInterviewFormChange}
+                                    className="bg-amber-900 text-white p-2 rounded w-full"
+                                    required
+                                />
+                            </div>
+                        )}
+                        <Button type="submit" color="success" className="w-full">Schedule Interview</Button>
+                    </form>
+                </CardBody>
+            </Card>
 
-            {/* Rejected Applications Section */}
-            <div>
-                <h2>Rejected Applications</h2>
-                {rejectedApplications.length === 0 ? (
-                    <p>No rejected applications</p>
-                ) : (
-                    rejectedApplications.map((application, index) => (
-                        <div key={index}>
-                            <h3>Rejected Application for {application.jobTitle}</h3>
-                            <p>Application ID: {application.applicationID}</p>
-                            <p>Student Name: {application.name}</p>
-                            <p>Student ID: {application.studentID}</p>
-                            <p>Job ID: {application.jobID}</p>
-                        </div>
-                    ))
-                )}
-            </div>
-
-            <div>
-                <button onClick={handleLogout}>Logout</button>
-            </div>
+            {/* Logout Button */}
+            <Button onClick={()=>navigate('/recruiter/profile')} color="primary" >
+                Profile
+            </Button>
+            <Button onClick={handleLogout} color="warning" >
+                Logout
+            </Button>
         </div>
     );
 };

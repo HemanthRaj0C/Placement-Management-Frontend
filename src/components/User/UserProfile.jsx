@@ -4,6 +4,17 @@ import axios from "axios";
 import UserProfileForm from "./UserProfile/UserProfileForm";
 import UserProfileView from "./UserProfile/UserProfileView";
 import ResumeSection from "./UserProfile/ResumeSection";
+import { 
+    Card, 
+    CardHeader, 
+    CardBody, 
+    Divider, 
+    Button, 
+    Avatar 
+  } from "@nextui-org/react";
+  import { FaSignOutAlt } from "react-icons/fa";
+  import { MdDashboard } from "react-icons/md";
+
 
 const UserProfile = () => {
     const navigate = useNavigate();
@@ -12,10 +23,17 @@ const UserProfile = () => {
     const [latestResume, setLatestResume] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [userProfile, setUserProfile] = useState({
-        firstName: "", lastName: "", email: "", mobileNumber: "",
-        degree: "", degreeStatus: "", highestQualification: "",
-        technicalSkills: [], otherSkills: [], experience: 0,
-        projectLinks: []
+        firstName: "", 
+        lastName: "", 
+        email: "", 
+        mobileNumber: "",
+        degree: "", 
+        degreeStatus: "", 
+        highestQualification: "",
+        technicalSkills: [], 
+        otherSkills: [], 
+        experience: "",
+        projectLinks: ['']
     });
     const [formData, setFormData] = useState({...userProfile});
 
@@ -30,10 +48,12 @@ const UserProfile = () => {
             const response = await axios.get('http://localhost:3001/api/userProfile', {
                 headers: { token: token }
             });
+            
             if(response.data.length === 0){
                 setNewUser(true);
-                setIsEditMode(true);  // Automatically open edit mode for new users
+                setIsEditMode(true);
             }
+            
             if (response.data.length > 0) {
                 const profile = response.data[0];
                 setUserProfile(profile);
@@ -43,11 +63,65 @@ const UserProfile = () => {
         } catch (error) {
             if(newUser){
                 alert("Please create your profile");
+                setIsEditMode(true);
             }
             else{
                 alert("Failed to fetch user profile");
             }
         }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSkillChange = (type, value) => {
+        const skillArray = value.split(',').map(skill => skill.trim()).filter(skill => skill);
+        setFormData(prev => ({
+            ...prev,
+            [type]: skillArray
+        }));
+    };
+
+    const handleProjectLinkChange = (index, value) => {
+        const updatedLinks = [...formData.projectLinks];
+        updatedLinks[index] = value;
+        setFormData(prev => ({
+            ...prev,
+            projectLinks: updatedLinks
+        }));
+    };
+
+    const addProjectLink = () => {
+        setFormData(prev => ({
+            ...prev,
+            projectLinks: [...prev.projectLinks, '']
+        }));
+    };
+
+    const handleSubmit = async (data) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post('http://localhost:3001/api/userProfile', data, {
+                headers: { token: token }
+            });
+
+            alert(newUser ? "Profile created successfully" : "Profile updated successfully");
+            setUserProfile({...data});
+            setIsEditMode(false);
+            setNewUser(false);
+        } catch (error) {
+            alert(error.response?.data?.message || "Failed to update profile");
+        }
+    };
+
+    const handleCancel = () => {
+        setFormData({...userProfile});
+        setIsEditMode(false);
     };
 
     const handleFileUpload = async (e) => {
@@ -167,131 +241,79 @@ const UserProfile = () => {
         }
     };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSkillChange = (type, value) => {
-        const skillArray = value.split(',').map(skill => skill.trim()).filter(skill => skill);
-        setFormData(prev => ({
-            ...prev,
-            [type]: skillArray
-        }));
-    };
-
-    const handleProjectLinkChange = (index, value) => {
-        const updatedLinks = [...formData.projectLinks];
-        updatedLinks[index] = value;
-        setFormData(prev => ({
-            ...prev,
-            projectLinks: updatedLinks
-        }));
-    };
-
-    const addProjectLink = () => {
-        setFormData(prev => ({
-            ...prev,
-            projectLinks: [...prev.projectLinks, '']
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const token = localStorage.getItem('token');
-            await axios.post('http://localhost:3001/api/userProfile', formData, {
-                headers: { token: token }
-            });
-
-            alert(newUser ? "Profile created successfully" : "Profile updated successfully");
-            setUserProfile({...formData});
-            setIsEditMode(false);
-            setNewUser(false);
-        } catch (error) {
-            if(newUser){
-                alert("Please create your profile");
-            }
-            else{
-                alert(error.response?.data?.message || "Failed to update profile");
-            }
-        }
-    };
-
     const handleLogout = () => {
         localStorage.removeItem("token");
         navigate("/");
     };
 
     return (
-        <div>
-            <h1>User Profile</h1>
-            {newUser ? (
+        <div className="min-h-screen bg-gray-900 text-white">
+        <div className="max-w-full mx-28 px-6 py-8">
+            <Card className="bg-blue-900 text-white">
+            <CardHeader className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                <Avatar text="UP" color="gradient" size="lg" />
+                <h1 className="text-2xl font-bold">User Profile</h1>
+                </div>
+                <div className="flex gap-4">
+                <Button
+                    auto
+                    color="success"
+                    onClick={() => navigate("/user/dashboard")}
+                    startContent={<MdDashboard />}
+                >
+                    Dashboard
+                </Button>
+                <Button
+                    auto
+                    color="danger"
+                    onClick={handleLogout}
+                    startContent={<FaSignOutAlt />}
+                >
+                    Logout
+                </Button>
+                </div>
+            </CardHeader>
+            <Divider />
+            <CardBody>
+                {newUser || isEditMode ? (
+                <div className="max-w-full mx-40">
+                <UserProfileForm 
+                    initialFormData={userProfile}
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    handleSkillChange={handleSkillChange}
+                    handleProjectLinkChange={handleProjectLinkChange}
+                    addProjectLink={addProjectLink}
+                    handleSubmit={(e) => {
+                        e.preventDefault(); // Prevent default form submission
+                        handleSubmit(formData);
+                    }}
+                    onCancel={handleCancel}
+                    newUser={newUser}
+                    isEditMode={isEditMode}
+                />
+                </div>
+                ) : (
                 <div>
-                    <p>Welcome! Please create your profile to get started.</p>
-                    <UserProfileForm 
-                        formData={formData}
-                        handleInputChange={handleInputChange}
-                        handleSkillChange={handleSkillChange}
-                        handleProjectLinkChange={handleProjectLinkChange}
-                        addProjectLink={addProjectLink}
-                        handleSubmit={handleSubmit}
-                        newUser={newUser}
-                        setIsEditMode={setIsEditMode}
+                    <UserProfileView
+                    userProfile={userProfile}
+                    onEditProfile={() => setIsEditMode(true)}
                     />
-                    <div>
-                        <button onClick={() => navigate("/user/dashboard")}>
-                            Go to Dashboard
-                        </button>
-                        <button onClick={handleLogout}>
-                            Logout
-                        </button>
-                    </div>
+                    <ResumeSection 
+                        latestResume={latestResume}
+                        handleFileUpload={handleFileUpload}
+                        isUploading={isUploading}
+                        handleDownloadResume={handleDownloadResume}
+                        viewResume={viewResume}
+                    />
                 </div>
-            ) : (
-                <div>
-                    {!isEditMode ? (
-                        <div>
-                            <UserProfileView userProfile={userProfile} />
-                            <button onClick={() => setIsEditMode(true)}>
-                                Edit Profile
-                            </button>
-                            <ResumeSection 
-                                latestResume={latestResume}
-                                handleFileUpload={handleFileUpload}
-                                isUploading={isUploading}
-                                handleDownloadResume={handleDownloadResume}
-                                viewResume={viewResume}
-                            />
-                        </div>
-                    ) : (
-                        <UserProfileForm 
-                            formData={formData}
-                            handleInputChange={handleInputChange}
-                            handleSkillChange={handleSkillChange}
-                            handleProjectLinkChange={handleProjectLinkChange}
-                            addProjectLink={addProjectLink}
-                            handleSubmit={handleSubmit}
-                            newUser={newUser}
-                            setIsEditMode={setIsEditMode}
-                        />
-                    )}
-
-                    <div>
-                        <button onClick={() => navigate("/user/dashboard")}>
-                            Go to Dashboard
-                        </button>
-                        <button onClick={handleLogout}>
-                            Logout
-                        </button>
-                    </div>
-                </div>
-            )}
+                )}
+            </CardBody>
+            </Card>
         </div>
-    );
+    </div>
+  );
 };
 
 export default UserProfile;
