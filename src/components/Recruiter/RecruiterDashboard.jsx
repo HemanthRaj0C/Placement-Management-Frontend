@@ -56,7 +56,7 @@ const RecruiterDashboard = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem("recruiterToken");
-
+            console.log(jobData)
             const response = await axios.post(
                 "http://localhost:3001/api/jobs", 
                 jobData,
@@ -327,11 +327,20 @@ const RecruiterDashboard = () => {
                     <Select
                     label="Location Type"
                     name="jobLocationType"
-                    value={jobData.jobLocationType}
-                    onChange={(value) => handleJobDataChange({ target: { name: "jobLocationType", value } })}
+                    selectedKeys={jobData.jobLocationType ? [jobData.jobLocationType] : []}
+                    onSelectionChange={(keys) => {
+                        const selectedValue = Array.from(keys)[0];
+                        setJobData(prev => ({
+                            ...prev,
+                            jobLocationType: selectedValue
+                        }));
+                    }}
                     >
-                    <SelectItem value="On-Site">On-Site</SelectItem>
-                    <SelectItem value="Remote">Remote</SelectItem>
+                    {['Remote', 'On-Site'].map((type) => (
+                        <SelectItem key={type} value={type}>
+                            {type}
+                        </SelectItem>
+                    ))}
                     </Select>
                     <Input
                     label="Job Role"
@@ -345,12 +354,20 @@ const RecruiterDashboard = () => {
                     <Select
                     label="Job Type"
                     name="jobType"
-                    value={jobData.jobType}
-                    onChange={(value) => handleJobDataChange({ target: { name: "jobType", value } })}
+                    selectedKeys={jobData.jobType ? [jobData.jobType] : []}
+                    onSelectionChange={(keys) => {
+                        const selectedValue = Array.from(keys)[0];
+                        setJobData(prev => ({
+                            ...prev,
+                            jobType: selectedValue
+                        }));
+                    }}
                     >
-                    <SelectItem value="Full Time">Full Time</SelectItem>
-                    <SelectItem value="Part Time">Part Time</SelectItem>
-                    <SelectItem value="Internship">Internship</SelectItem>
+                    {['Full Time', 'Part Time', 'Internship'].map((type) => (
+                        <SelectItem key={type} value={type}>
+                            {type}
+                        </SelectItem>
+                    ))}
                     </Select>
                     <Input
                     label="Eligibility Criteria"

@@ -156,7 +156,7 @@ const ProfileCreationForm = ({
                             variant="bordered"
                             startContent={<FaBriefcase className="text-cyan-400" />}
                             color="primary"
-                            selectedKeys={formData.experience ? [formData.experience] : []}
+                            selectedKeys={formData.experience ? [formData.experience.toString()] : []}
                             onChange={handleInputChange}
                             required
                         >

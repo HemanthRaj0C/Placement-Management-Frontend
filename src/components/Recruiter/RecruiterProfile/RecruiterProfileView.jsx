@@ -29,6 +29,7 @@ const ProfileDetail = ({ icon, label, value }) => (
 );
 
 const RecruiterProfileView = ({ recruiterProfile }) => {
+  console.log(recruiterProfile);
   return (
     <Card className="bg-amber-900 text-white border border-amber-500/20 max-w-4xl mx-auto">
       <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">

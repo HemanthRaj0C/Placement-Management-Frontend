@@ -83,16 +83,19 @@ const RecruiterProfileForm = ({
                         <Select
                             label="Company Type"
                             name="companyType"
-                            value={formData.companyType}
+                            selectedKeys={formData.companyType ? [formData.companyType] : []}
                             onChange={handleInputChange}
                             variant="bordered"
                             color="primary"
                             startContent={<FaBuilding className="text-orange-400" />}
                             required
                         >
-                            <SelectItem value="Startup">Startup</SelectItem>
-                            <SelectItem value="Mid-Size">Mid-Size</SelectItem>
-                            <SelectItem value="Enterprise">Enterprise</SelectItem>
+                            {['Startup', 'Mid-Size', 'Enterprise'].map((type) => (
+                                <SelectItem key={type} value={type}>
+                                    {type}
+                                </SelectItem>
+                            ))}
+                            
                         </Select>
                     </div>
 

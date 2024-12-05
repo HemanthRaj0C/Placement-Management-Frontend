@@ -263,6 +263,7 @@ const UserDashboard = () => {
                                                 <p><strong>Company:</strong> {interview.companyName}</p>
                                                 <p><strong>Date:</strong> {new Date(interview.interviewDate).toLocaleDateString()}</p>
                                                 <p><strong>Time:</strong> {interview.interviewTime}</p>
+                                                <p><strong>Application Status:</strong> {interview.applicationStatus}</p>
                                                 <Chip 
                                                     color="warning" 
                                                     size="sm" 
