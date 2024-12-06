@@ -33,8 +33,8 @@ const ProfileCreationForm = ({
     addProjectLink,
     handleSubmit,
     onCancel,
-    isEditMode = false,
-    newUser = false
+    isEditMode,
+    newUser
 }) => {
     const handleProjectLinkRemove = (index) => {
         const newProjectLinks = formData.projectLinks.filter((_, i) => i !== index);
@@ -228,18 +228,22 @@ const ProfileCreationForm = ({
 
                     <div className="flex justify-end gap-2 mt-6">
                         <Button 
-                            color="default" 
-                            variant="bordered" 
-                            onClick={onCancel}
-                        >
-                            Cancel
-                        </Button>
-                        <Button 
                             color="primary" 
                             type="submit"
                         >
                             {isEditMode ? 'Update Profile' : 'Create Profile'}
                         </Button>
+                        {!newUser && (
+                            <Button 
+                                type="button" 
+                                onClick={onCancel} 
+                                color="error"
+                                className="hover:bg-red-500 bg-red-600" 
+                                auto
+                            >
+                                Cancel
+                            </Button>
+                        )}
                     </div>
                 </form>
             </CardBody>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Card, CardHeader, CardBody, Divider, Button, Spacer } from "@nextui-org/react";
+import { Avatar, Card, CardHeader, CardBody, Divider, Button, Spacer } from "@nextui-org/react";
 import RecruiterProfileForm from './RecruiterProfile/RecruiterProfileForm';
 import RecruiterProfileView from './RecruiterProfile/RecruiterProfileView';
+import { FaSignOutAlt } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 
 const RecruiterProfile = () => {
     const navigate = useNavigate();
@@ -80,15 +82,35 @@ const RecruiterProfile = () => {
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white">
-            <Card className="max-w-5xl w-full bg-amber-900 border border-amber-500/20">
+            <Card className="w-full mx-36 bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                    <h1 className="text-2xl font-bold text-white">Recruiter Company Profile</h1>
+                    <div className="flex items-center gap-3">
+                    <Avatar text="UP" color="gradient" size="lg" />
+                    <h1 className="text-2xl font-bold text-white">Recruiter Profile</h1>
+                    </div>
+                    <div className="flex gap-4">
+                    <Button
+                        auto
+                        color="success"
+                        onClick={() => navigate("/recruiter/dashboard")}
+                        startContent={<MdDashboard />}
+                    >
+                        Dashboard
+                    </Button>
+                    <Button
+                        auto
+                        color="danger"
+                        onClick={handleLogout}
+                        startContent={<FaSignOutAlt />}
+                    >
+                        Logout
+                    </Button>
+                    </div>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
                 <CardBody className="p-6">
-                    {newRecruiter ? (
+                    {newRecruiter || isEditMode ? (
                         <>
-                            <p className="text-lg mb-4">Welcome! Please create your company profile to get started.</p>
                             <RecruiterProfileForm
                                 formData={formData}
                                 handleInputChange={handleInputChange}
@@ -96,43 +118,15 @@ const RecruiterProfile = () => {
                                 newRecruiter={newRecruiter}
                                 setIsEditMode={setIsEditMode}
                             />
-                            <Spacer y={1} />
-                            <div className="flex justify-end gap-4">
-                                <Button onClick={() => navigate("/recruiter/dashboard")} color="warning" auto>
-                                    Go to Dashboard
-                                </Button>
-                                <Button onClick={handleLogout} color="error" auto>
-                                    Logout
-                                </Button>
-                            </div>
                         </>
                     ) : (
                         <>
-                            {isEditMode ? (
-                                <RecruiterProfileForm
-                                    formData={formData}
-                                    handleInputChange={handleInputChange}
-                                    handleSubmit={handleSubmit}
-                                    newRecruiter={newRecruiter}
-                                    setIsEditMode={setIsEditMode}
-                                />
-                            ) : (
-                                <RecruiterProfileView recruiterProfile={recruiterProfile} />
-                            )}
+                            <RecruiterProfileView 
+                                recruiterProfile={recruiterProfile} 
+                                onEditProfile={() => setIsEditMode(true)   
+                            } 
+                            />
                             <Spacer y={1} />
-                            <div className="flex justify-end gap-4">
-                                {!isEditMode && (
-                                    <Button onClick={() => setIsEditMode(true)} color="primary" auto>
-                                        Edit Profile
-                                    </Button>
-                                )}
-                                <Button onClick={() => navigate("/recruiter/dashboard")} color="warning" auto>
-                                    Go to Dashboard
-                                </Button>
-                                <Button onClick={handleLogout} color="error" auto>
-                                    Logout
-                                </Button>
-                            </div>
                         </>
                     )}
                 </CardBody>

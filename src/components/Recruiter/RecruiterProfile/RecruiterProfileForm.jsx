@@ -7,10 +7,10 @@ const RecruiterProfileForm = ({
     handleInputChange, 
     handleSubmit, 
     newRecruiter,
-    setIsEditMode 
+    setIsEditMode
 }) => {
     return (
-        <Card className="bg-amber-900 text-white border border-amber-500/20 max-w-full mx-auto">
+        <Card className="bg-amber-900 text-white border border-amber-500/20 w-3/4 mx-auto">
             <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
                 <div className="flex gap-3 items-center">
                     <FaUserEdit className="text-2xl text-orange-400" />

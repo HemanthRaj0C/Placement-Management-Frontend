@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
     Card,
+    Chip,
     CardHeader,
     CardBody,
     Divider,
@@ -13,6 +14,8 @@ import {
     Select,
     SelectItem,
   } from "@nextui-org/react";
+  import { FaBuilding, FaSignOutAlt } from "react-icons/fa";
+  import { Avatar } from "@nextui-org/react";
 
 const RecruiterDashboard = () => {
     const [jobData, setJobData] = useState({
@@ -38,6 +41,7 @@ const RecruiterDashboard = () => {
     });
     const [postedJobs, setPostedJobs] = useState([]);
     const [rejectedApplications, setRejectedApplications] = useState([]);
+    const [acceptedApplications, setAcceptedApplications] = useState([]);
     const [shortListedApplications, setShortListedApplications] = useState([]);
     const [jobApplications, setJobApplications] = useState([]);
     const [appliedResumes, setAppliedResumes] = useState([]);
@@ -117,6 +121,10 @@ const RecruiterDashboard = () => {
             const shortListedApplications = response.data.filter(
                 app => app.applicationStatus === 'Shortlisted'
             );
+            const acceptedApplications = response.data.filter(
+                app => app.applicationStatus === 'Hired'
+            );
+            setAcceptedApplications(acceptedApplications);
             setShortListedApplications(shortListedApplications);
             setRejectedApplications(rejectedApplications);
             setJobApplications(activeApplications);
@@ -288,9 +296,37 @@ const RecruiterDashboard = () => {
     }, []);
 
     return (
-        <div className="flex justify-center items-center min-h-screen flex-col space-y-10 py-20 bg-gray-900 text-white">
-        {isEditMode ? (
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20">
+        <div className="bg-gray-900 min-h-screen py-20 p-6 text-white">
+            <Card className="max-w-7xl mx-auto bg-amber-900/70 border border-amber-500/20 text-white">
+                <CardHeader className="flex justify-between items-center bg-amber-800/70 py-4 px-6">
+                    <div className="flex items-center gap-3">
+                        <FaBuilding className="text-2xl text-orange-400" />
+                        <h1 className="text-2xl font-semibold">Recruiter Dashboard</h1>
+                    </div>
+                    <div className="flex gap-4">
+                        <Button 
+                            color="success" 
+                            onClick={() => navigate("/recruiter/profile")}
+                            startContent={<Avatar className="w-6 h-6" />}
+                        >
+                            Profile
+                        </Button>
+                        <Button 
+                            color="danger" 
+                            variant="solid" 
+                            onClick={handleLogout}
+                            startContent={<FaSignOutAlt />}
+                        >
+                            Logout
+                        </Button>
+                    </div>
+                </CardHeader>
+
+                <Divider className="bg-amber-500/20" />
+                <CardBody className="space-y-6 p-6">
+                {/* Post a New Job Section */}
+                {isEditMode ? (
+                <Card className="max-w-3xl ml-[20%] bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
                 <h1 className="text-2xl font-bold text-white">Recruiter Dashboard</h1>
                 </CardHeader>
@@ -424,219 +460,262 @@ const RecruiterDashboard = () => {
                     Cancel
                 </Button>
                 <Spacer y={2} />
-                <Button onClick={() => navigate("/")} color="warning" auto>
-                    Logout
-                </Button>
                 </CardBody>
             </Card>
         ) : (
 
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                <h1 className="text-2xl font-bold text-white">Recruiter Dashboard</h1>
+            <Card className="max-w-xl bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center bg-amber-950/50">
+                <h2 className="font-semibold text-white">New Job</h2>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
-                <CardBody className="p-6">
-                <h2 className="text-xl font-semibold mb-4 text-white">Post a New Job</h2>
-                <Button onClick={() => setIsEditMode(true)} color="success" className="w-full">
-                    Post a New Job
-                </Button>
-                <Spacer y={2} />
-                <Button onClick={() => navigate("/")} color="warning" auto>
-                    Logout
+                <CardBody className="">
+                <h2 className="text-sm font-semibold mb-3 text-white">Post a New Job</h2>
+                <Button onClick={() => setIsEditMode(true)} color="warning" className="w-1/6">
+                    Job
                 </Button>
                 </CardBody>
             </Card>
         )}
             {/* Posted Jobs Section */}
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                    <h2 className="text-2xl font-bold text-white">Your Posted Jobs</h2>
+            <Card className="bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center gap-2">
+                    <h2 className="font-semibold text-white">Your Posted Jobs</h2>
                 </CardHeader>
-                <Divider className="bg-amber-500/20" />
-                <CardBody className="p-6">
+                <CardBody>
                     {postedJobs.length === 0 ? (
                         <p className="text-white">No jobs posted yet</p>
                     ) : (
-                        postedJobs.map((job, index) => (
-                            <div key={index} className="mb-6">
-                                <h3 className="text-xl text-white">{job.jobTitle} at {job.companyName}</h3>
-                                <p className="text-white">Job ID: {job.jobID}</p>
-                                <p className="text-white">Job Role: {job.jobRole}</p>
-                                <p className="text-white">Location: {job.jobLocation} ({job.jobLocationType})</p>
-                                <p className="text-white">Job Type: {job.jobType}</p>
-                                <p className="text-white">CTC: {job.ctc}</p>
-                                <p className="text-white">Last Date to Apply: {new Date(job.lastDateToApply).toLocaleDateString()}</p>
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                        {postedJobs.map((job) => (
+                            <Card 
+                                key={job.jobTitle} 
+                                className="bg-amber-950/50 border border-amber-500/20"
+                            >
+                            <CardBody className="space-y-2">
+                            <div className="flex justify-between items-center">
+                                <h3 className="font-bold text-orange-400">{job.jobTitle} at {job.companyName}</h3>
+                                <Chip 
+                                    color="primary" 
+                                    size="sm" 
+                                    variant="solid"
+                                    className="bg-orange-600/50"
+                                >
+                                    {job.jobRole}
+                                </Chip>
                             </div>
-                        ))
+                                <p className="text-white"><strong>Job ID:</strong> {job.jobID}</p>
+                                <p className="text-white"><strong>Location:</strong> {job.jobLocation} ({job.jobLocationType})</p>
+                                <p className="text-white"><strong>Job Type:</strong> {job.jobType}</p>
+                                <p className="text-white"><strong>CTC:</strong> {job.ctc}</p>
+                                <p className="text-white"><strong>Last Date to Apply:</strong> {new Date(job.lastDateToApply).toLocaleDateString()}</p>
+                            </CardBody>
+                            </Card>
+                        ))}
+                        </div>
                     )}
                 </CardBody>
             </Card>
 
             {/* Job Applications Section */}
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20 mt-8">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                    <h2 className="text-2xl font-bold text-white">Job Applications</h2>
+            <Card className="bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center gap-2">
+                    <h2 className="font-semibold text-white">Job Applications</h2>
                 </CardHeader>
-                <Divider className="bg-amber-500/20" />
-                <CardBody className="p-6">
+                <CardBody className="">
                     {jobApplications.length === 0 ? (
                         <p className="text-white">No applications received</p>
                     ) : (
-                        jobApplications.map((application, index) => (
-                            <div key={index} className="mb-6">
-                                <h3 className="text-xl text-white">Application for {application.jobTitle}</h3>
-                                <p className="text-white">Application ID: {application.applicationID}</p>
-                                <p className="text-white">Student Name: {application.name}</p>
-                                <p className="text-white">Student ID: {application.studentID}</p>
-                                <p className="text-white">Job ID: {application.jobID}</p>
-                                <p className="text-white">Current Status: {application.applicationStatus}</p>
-                                <div className="flex space-x-4 mt-4">
-                                    <Button
-                                        onClick={() => updateApplicationStatus(application.applicationID, 'Shortlisted')}
-                                        disabled={application.applicationStatus === 'Shortlisted'}
-                                        color="warning"
-                                    >
-                                        Shortlist
-                                    </Button>
-                                    <Button
-                                        onClick={() => updateApplicationStatus(application.applicationID, 'Rejected')}
-                                        disabled={application.applicationStatus === 'Rejected'}
-                                        color="error"
-                                    >
-                                        Reject
-                                    </Button>
-                                    {appliedResumes.find(resume => resume.studentID === application.studentID) && (
-                                        <>
-                                            <Button
-                                                onClick={() => {
-                                                    const resume = appliedResumes.find(r => r.studentID === application.studentID);
-                                                    viewResume(resume._id);
-                                                }}
-                                                color="primary"
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                            {jobApplications.map((application) => (
+                                <Card 
+                                    key={application.applicationID} 
+                                    className="bg-amber-950/50 border border-amber-500/20"
+                                >
+                                    <CardBody className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-orange-400">{application.name}</h3>
+                                            <Chip 
+                                                color={
+                                                    application.applicationStatus === 'Applied' ? 'primary' : 
+                                                    application.applicationStatus === 'Shortlisted' ? 'success' : 
+                                                    application.applicationStatus === 'Rejected' ? 'danger' : 'default'
+                                                }
+                                                variant="solid"
                                             >
-                                                View Resume
-                                            </Button>
+                                                {application.applicationStatus}
+                                            </Chip>
+                                        </div>
+                                        <p className="text-white"><strong>Job Title:</strong> {application.jobTitle}</p>
+                                        <p className="text-white"><strong>Application ID:</strong> {application.applicationID}</p>
+                                        <p className="text-white"><strong>Student ID:</strong> {application.studentID}</p>
+                                        <p className="text-white"><strong>Job ID:</strong> {application.jobID}</p>
+                                        <div className="flex space-x-4 mt-4">
                                             <Button
-                                                onClick={() => {
-                                                    const resume = appliedResumes.find(r => r.studentID === application.studentID);
-                                                    downloadResume(resume._id);
-                                                }}
+                                                onClick={() => updateApplicationStatus(application.applicationID, 'Shortlisted')}
+                                                disabled={application.applicationStatus === 'Shortlisted'}
                                                 color="secondary"
                                             >
-                                                Download Resume
+                                                Shortlist
                                             </Button>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        ))
+                                            <Button
+                                                onClick={() => updateApplicationStatus(application.applicationID, 'Rejected')}
+                                                disabled={application.applicationStatus === 'Rejected'}
+                                                color="danger"
+                                            >
+                                                Reject
+                                            </Button>
+                                            {appliedResumes.find(resume => resume.studentID === application.studentID) && (
+                                                <>
+                                                    <Button
+                                                        onClick={() => {
+                                                            const resume = appliedResumes.find(r => r.studentID === application.studentID);
+                                                            viewResume(resume._id);
+                                                        }}
+                                                        color="primary"
+                                                    >
+                                                        View Resume
+                                                    </Button>
+                                                    <Button
+                                                        onClick={() => {
+                                                            const resume = appliedResumes.find(r => r.studentID === application.studentID);
+                                                            downloadResume(resume._id);
+                                                        }}
+                                                        color="secondary"
+                                                    >
+                                                        Download Resume
+                                                    </Button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </div>
                     )}
                 </CardBody>
             </Card>
 
-            {/* Rejected Applications Section */}
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20 mt-8">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                    <h2 className="text-2xl font-bold text-white">Rejected Applications</h2>
+            {/* Shortlisted Applications Section */}
+            <Card className="bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center gap-2">
+                    <h2 className="font-semibold text-white">Shortlisted Applications</h2>
                 </CardHeader>
-                <Divider className="bg-amber-500/20" />
-                <CardBody className="p-6">
-                    {rejectedApplications.length === 0 ? (
-                        <p className="text-white">No applications rejected</p>
+                <CardBody className="">
+                    {shortListedApplications.length === 0 ? (
+                        <p className="text-white">No applications shortlisted</p>
                     ) : (
-                        rejectedApplications.map((application, index) => (
-                            <div key={index} className="mb-6">
-                                <h3 className="text-xl text-white">Application for {application.jobTitle}</h3>
-                                <p className="text-white">Application ID: {application.applicationID}</p>
-                                <p className="text-white">Student Name: {application.name}</p>
-                                <p className="text-white">Student ID: {application.studentID}</p>
-                                <p className="text-white">Job ID: {application.jobID}</p>
-                                <p className="text-white">Current Status: {application.applicationStatus}</p>
-                            </div>
-                        ))
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                            {shortListedApplications.map((application) => (
+                                <Card
+                                    key={application.applicationID}
+                                    className="bg-amber-950/50 border border-amber-500/20"
+                                >
+                                    <CardBody className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-orange-400">{application.name}</h3>
+                                            <Chip color="success" variant="solid">
+                                                Shortlisted
+                                            </Chip>
+                                        </div>
+                                        <p className="text-white"><strong>Job Title:</strong> {application.jobTitle}</p>
+                                        <p className="text-white"><strong>Application ID:</strong> {application.applicationID}</p>
+                                        <p className="text-white"><strong>Student ID:</strong> {application.studentID}</p>
+                                        <p className="text-white"><strong>Job ID:</strong> {application.jobID}</p>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </div>
                     )}
                 </CardBody>
             </Card>
 
-            {/* Interview Section */}
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20 mt-8">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                    <h2 className="text-2xl font-bold text-white">Scheduled Interview</h2>
+            {/* Scheduled Interviews Section */}
+            <Card className="bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center gap-2">
+                    <h2 className="font-semibold text-white">Scheduled Interviews</h2>
                 </CardHeader>
-                <Divider className="bg-amber-500/20" />
-                <CardBody className="p-6">
+                <CardBody className="">
                     {interviews.length === 0 ? (
                         <p className="text-white">No interviews scheduled</p>
                     ) : (
-                        interviews.map((interview, index) => (
-                            <div key={index} className="mb-6">
-                                <h3 className="text-xl text-white">Interview for {interview.jobTitle}</h3>
-                                <p className="text-white">Application ID: {interview.applicationID}</p>
-                                <p className="text-white">Interview Date: {new Date(interview.interviewDate).toLocaleDateString()}</p>
-                                <p className="text-white">Interview Time: {interview.interviewTime}</p>
-                                <p className="text-white">Interview Mode: {interview.interviewMode}</p>
-                                {interview.interviewMode === 'Online' && (
-                                    <p className="text-white">Interview Link: <a href={interview.interviewLink} target="_blank" rel="noreferrer">Join Interview</a></p>
-                                )}
-                            </div>
-                        ))
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                            {interviews.map((interview) => (
+                                <Card 
+                                    key={interview.applicationID} 
+                                    className="bg-amber-950/50 border border-amber-500/20"
+                                >
+                                    <CardBody className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-orange-400 text-lg">{interview.name}</h3>
+                                            <Chip 
+                                                color={
+                                                    interview.applicationStatus === 'Interview' ? 'warning' : 
+                                                    interview.applicationStatus === 'Accepted' ? 'success' : 
+                                                    interview.applicationStatus === 'Rejected' ? 'danger' :
+                                                    interview.applicationStatus === 'Shortlisted' ? 'primary' :
+                                                    'default'
+                                                }
+                                                variant="solid"
+                                            >
+                                                {interview.applicationStatus}
+                                            </Chip>
+                                        </div>
+                                        <p className="text-white"><strong>Job Title:</strong> {interview.jobTitle}</p>
+                                        <p className="text-white"><strong>Application ID:</strong> {interview.applicationID}</p>
+                                        <p className="text-white"><strong>Interview Date:</strong> {new Date(interview.interviewDate).toLocaleDateString()}</p>
+                                        <p className="text-white"><strong>Interview Time:</strong> {interview.interviewTime}</p>
+                                        <p className="text-white"><strong>Interview Mode:</strong> {interview.interviewMode}</p>
+                                        {interview.interviewMode === 'Online' && (
+                                            <p className="text-white"><strong>Interview Link:</strong> <a href={interview.interviewLink} target="_blank" rel="noreferrer">Join Interview</a></p>
+                                        )}
+                                        
+                                        <div className="flex space-x-4 mt-4">
+                                        {interview.applicationStatus === 'Shortlisted' && (
+                                            <div className="flex space-x-4 mt-4">
+                                            <Button
+                                                onClick={() => updateInterviewStatus(interview.applicationID, 'Interview')}
+                                                color="primary"
+                                                className="mr-2"
+                                            >
+                                                Schedule Interview
+                                            </Button>
+                                            </div>
+                                        )}
+
+                                        {interview.applicationStatus === 'Interview' && (
+                                            <div className="flex space-x-4 mt-4">
+                                            <Button
+                                                onClick={() => updateInterviewStatus(interview.applicationID, 'Accepted')}
+                                                color="success"
+                                                className="mr-2"
+                                            >
+                                                Hire Candidate
+                                            </Button>
+                                            <Button
+                                                onClick={() => updateInterviewStatus(interview.applicationID, 'Rejected')}
+                                                color="danger"
+                                            >
+                                                Reject Candidate
+                                            </Button>
+                                            </div>
+                                        )}
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </div>
                     )}
                 </CardBody>
             </Card>
 
-            {/* Interview Modifying Section */}
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20 mt-8">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                    <h2 className="text-2xl font-bold text-white">Scheduled Interview</h2>
-                </CardHeader>
-                <Divider className="bg-amber-500/20" />
-                
-                {interviews.map((interview, index) => (
-                    <CardBody className="p-6">
-                    <div key={index} className="mb-6">
-                        <h3 className="text-xl text-white">Interview for {interview.jobTitle}</h3>
-                        <p className="text-white">Application ID: {interview.applicationID}</p>
-                        <p className="text-white">Student Name: {interview.name}</p>
-                        <p className="text-white">Interview Date: {new Date(interview.interviewDate).toLocaleDateString()}</p>
-                        <p className="text-white">Interview Time: {interview.interviewTime}</p>
-                        <p className="text-white">Interview Mode: {interview.interviewMode}</p>
-                        <p className="text-white">Current Status: {interview.applicationStatus}</p>
-                        {interview.interviewMode === 'Online' && (
-                            <p className="text-white">Interview Link: <a href={interview.interviewLink} target="_blank" rel="noreferrer">Join Interview</a></p>
-                        )}
-                        
-                        {/* Add status update buttons */}
-                        {interview.applicationStatus !== 'Accepted' && (
-                            <Button
-                                onClick={() => updateInterviewStatus(interview.applicationID, 'Accepted')}
-                                color="success"
-                                className="mr-2 mt-2"
-                            >
-                                Accept Candidate
-                            </Button>
-                        )}
-                        {interview.applicationStatus !== 'Rejected' && (
-                            <Button
-                                onClick={() => updateInterviewStatus(interview.applicationID, 'Rejected')}
-                                color="error"
-                                className="mt-2"
-                            >
-                                Reject Candidate
-                            </Button>
-                        )}
-                    </div>
-                    </CardBody>
-                ))}
-            </Card>
-
             {/* Interview Scheduling Section */}
-            <Card className="max-w-4xl w-full bg-amber-900 border border-amber-500/20 mt-8">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
-                    <h2 className="text-2xl font-bold text-white">Schedule Interview</h2>
+            <Card className="max-w-xl bg-amber-900 border border-amber-500/20 mt-8">
+                <CardHeader className="flex items-center bg-amber-950/50 gap-2">
+                    <h2 className="font-semibold text-white">Schedule Interview</h2>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
-                <CardBody className="p-6">
+                <CardBody className="">
                     <form onSubmit={scheduleInterview} className="space-y-4">
                         <div>
                             <label className="text-white">Shortlisted Application</label>
@@ -705,18 +784,81 @@ const RecruiterDashboard = () => {
                                 />
                             </div>
                         )}
-                        <Button type="submit" color="success" className="w-full">Schedule Interview</Button>
+                        <Button type="submit" color="default" variant="shadow" className="w-1/4">Schedule Interview</Button>
                     </form>
                 </CardBody>
             </Card>
 
-            {/* Logout Button */}
-            <Button onClick={()=>navigate('/recruiter/profile')} color="primary" >
-                Profile
-            </Button>
-            <Button onClick={handleLogout} color="warning" >
-                Logout
-            </Button>
+            {/* Accepted Applications Section */}
+            <Card className="bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center gap-2">
+                    <h2 className="font-semibold text-white">Accepted Applications</h2>
+                </CardHeader>
+                <CardBody className="">
+                    {acceptedApplications.length === 0 ? (
+                        <p className="text-white">No applications accepted</p>
+                    ) : (
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                            {acceptedApplications.map((application) => (
+                                <Card
+                                    key={application.applicationID}
+                                    className="bg-amber-950/50 border border-amber-500/20"
+                                >
+                                    <CardBody className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-orange-400">{application.name}</h3>
+                                            <Chip color="success" variant="solid">
+                                                Hired
+                                            </Chip>
+                                        </div>
+                                        <p className="text-white"><strong>Job Title:</strong> {application.jobTitle}</p>
+                                        <p className="text-white"><strong>Application ID:</strong> {application.applicationID}</p>
+                                        <p className="text-white"><strong>Student ID:</strong> {application.studentID}</p>
+                                        <p className="text-white"><strong>Job ID:</strong> {application.jobID}</p>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
+                </CardBody>
+            </Card>
+
+            {/* Rejected Applications Section */}
+            <Card className="bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center gap-2">
+                    <h2 className="font-semibold text-white">Rejected Applications</h2>
+                </CardHeader>
+                <CardBody className="">
+                    {rejectedApplications.length === 0 ? (
+                        <p className="text-white">No applications rejected</p>
+                    ) : (
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                            {rejectedApplications.map((application) => (
+                                <Card 
+                                    key={application.applicationID} 
+                                    className="bg-amber-950/50 border border-amber-500/20"
+                                >
+                                    <CardBody className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-orange-400 text-lg">{application.name}</h3>
+                                            <Chip color="danger" variant="solid">
+                                                Rejected
+                                            </Chip>
+                                        </div>
+                                        <p className="text-white"><strong>Job Title:</strong> {application.jobTitle}</p>
+                                        <p className="text-white"><strong>Application ID:</strong> {application.applicationID}</p>
+                                        <p className="text-white"><strong>Student ID:</strong> {application.studentID}</p>
+                                        <p className="text-white"><strong>Job ID:</strong> {application.jobID}</p>
+                                    </CardBody>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
+                </CardBody>
+            </Card>
+            
+            </CardBody>
+        </Card>
         </div>
     );
 };

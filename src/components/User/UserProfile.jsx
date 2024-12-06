@@ -61,13 +61,7 @@ const UserProfile = () => {
                 setNewUser(false);
             }
         } catch (error) {
-            if(newUser){
-                alert("Please create your profile");
-                setIsEditMode(true);
-            }
-            else{
-                alert("Failed to fetch user profile");
-            }
+            alert(newUser ? "Please create your company profile" : "Failed to fetch recruiter profile");
         }
     };
 
@@ -248,9 +242,9 @@ const UserProfile = () => {
 
     return (
         <div className="min-h-screen bg-gray-900 text-white">
-        <div className="max-w-full mx-28 px-6 py-8">
+        <div className="max-w-full mx-28 px-6 py-20">
             <Card className="bg-blue-900 text-white">
-            <CardHeader className="flex justify-between items-center">
+            <CardHeader className="flex justify-between items-center bg-blue-950/90 py-4 px-6">
                 <div className="flex items-center gap-3">
                 <Avatar text="UP" color="gradient" size="lg" />
                 <h1 className="text-2xl font-bold">User Profile</h1>
@@ -277,7 +271,7 @@ const UserProfile = () => {
             <Divider />
             <CardBody>
                 {newUser || isEditMode ? (
-                <div className="max-w-full mx-40">
+                <div className="w-3/4 mx-auto my-4">
                 <UserProfileForm 
                     initialFormData={userProfile}
                     formData={formData}
@@ -295,7 +289,7 @@ const UserProfile = () => {
                 />
                 </div>
                 ) : (
-                <div>
+                <div className="m-4">
                     <UserProfileView
                     userProfile={userProfile}
                     onEditProfile={() => setIsEditMode(true)}

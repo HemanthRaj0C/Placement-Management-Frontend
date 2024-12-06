@@ -28,15 +28,20 @@ const ProfileDetail = ({ icon, label, value }) => (
   </div>
 );
 
-const RecruiterProfileView = ({ recruiterProfile }) => {
-  console.log(recruiterProfile);
+const RecruiterProfileView = ({ recruiterProfile, onEditProfile }) => {
   return (
-    <Card className="bg-amber-900 text-white border border-amber-500/20 max-w-4xl mx-auto">
-      <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
+    <Card className="bg-amber-950/70 text-white border border-amber-500/20 w-3/4 mx-auto">
+      <CardHeader className="flex justify-between items-center bg-amber-900/50 py-4 px-6">
         <div className="flex gap-3 items-center">
           <FaBuilding className="text-2xl text-orange-400" />
           <h2 className="text-xl font-semibold">Company Profile</h2>
         </div>
+          <button 
+            onClick={onEditProfile}
+            className="bg-orange-600/50 hover:bg-orange-600/70 text-white px-4 py-2 rounded-md transition-all"
+          >
+            Edit Profile
+          </button>
       </CardHeader>
       <Divider className="bg-amber-500/20" />
       <CardBody className="p-6 space-y-4">

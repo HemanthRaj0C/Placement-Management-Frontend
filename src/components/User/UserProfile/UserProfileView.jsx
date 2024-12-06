@@ -31,7 +31,7 @@ const ProfileDetail = ({ icon, label, value }) => (
 
 const UserProfileView = ({ userProfile, onEditProfile }) => {
   return (
-    <Card className="bg-blue-950 text-white border border-blue-500/20 max-w-4xl mx-auto">
+    <Card className="bg-blue-950 text-white border border-blue-500/20 w-3/4 mx-auto">
       <CardHeader className="flex justify-between items-center bg-blue-900/50 py-4 px-6">
         <div className="flex gap-3 items-center">
           <FaAddressCard className="text-2xl text-cyan-400" />
