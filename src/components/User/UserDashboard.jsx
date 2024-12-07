@@ -5,7 +5,6 @@ import {
   Card, 
   CardHeader, 
   CardBody, 
-  CardFooter,
   Button, 
   Select, 
   SelectItem,
@@ -13,14 +12,13 @@ import {
   Chip,
   Avatar
 } from "@nextui-org/react";
-import { 
-  FaUser, 
+import {  
   FaSignOutAlt, 
   FaBriefcase, 
   FaFilter,
   FaAddressCard
 } from "react-icons/fa";
-import { div } from "framer-motion/client";
+import UserQuiz from "../User/UserProfile/UserQuiz";
 
 const UserDashboard = () => {
     const [applications, setApplications] = useState([]);
@@ -31,6 +29,9 @@ const UserDashboard = () => {
     const [filteredApplications, setFilteredApplications] = useState([]);
     const [selectedJobRole, setSelectedJobRole] = useState("");
     const [scheduledInterviews, setScheduledInterviews] = useState([]);
+    const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+    const [selectedJobForQuiz, setSelectedJobForQuiz] = useState(null);
+
     const navigate = useNavigate();
 
     const fetchApplications = async () => {
@@ -49,18 +50,40 @@ const UserDashboard = () => {
         navigate("/");
     };
 
-    const applyJob = async (jobID) => {
+    const applyJob = async (jobID, quizPassed = false) => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.post("http://localhost:3001/api/applyJob", 
+            if (!quizPassed) {
+                try {
+                    const quizResponse = await axios.get(
+                        `http://localhost:3001/api/getQuiz/${jobID}`,
+                        { headers: { token } }
+                    );
+
+                    if (quizResponse.data) {
+                        setSelectedJobForQuiz(jobID);
+                        setIsQuizModalOpen(true);
+                        return;
+                    }
+                } catch (quizErr) {
+                    if (quizErr.response?.status !== 404) {
+                        alert("Error checking job quiz");
+                        return;
+                    }
+                }
+            }
+
+            const response = await axios.post(
+                "http://localhost:3001/api/applyJob", 
                 { jobID: jobID },
                 { headers: { token: token } }
             );
+            
             alert(response.data.message);
             fetchAppliedJobs();
         }
         catch (err) {
-            console.log(err);
+            console.error("Job Application Error:", err);
             alert(err.response?.data?.message || "Failed to Apply");
         }
     };
@@ -231,6 +254,21 @@ const UserDashboard = () => {
                         </CardBody>
                     </Card>
 
+                    <UserQuiz 
+                        isOpen={isQuizModalOpen}
+                        onOpenChange={setIsQuizModalOpen}
+                        jobID={selectedJobForQuiz}
+                        token={localStorage.getItem("token")}
+                        onQuizComplete={(result) => {                            
+                            if (result.passed === true) {
+                                applyJob(selectedJobForQuiz, true);
+                            } else {
+                                alert(`Quiz Failed. Your score: ${result.score}/${result.totalMarks} (${result.percentage}%)`);
+                            }
+                            setIsQuizModalOpen(false);
+                        }}
+                    />
+
                     {/* Applied Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
                         <CardHeader>
@@ -254,7 +292,7 @@ const UserDashboard = () => {
                                         <h3 className="font-bold text-cyan-400">{job.jobTitle}</h3>
                                         <p className="text-white"><strong>Company:</strong> {job.companyName}</p>
                                         <Chip 
-                                            color="success" 
+                                            color="primary" 
                                             size="sm" 
                                             variant="solid"
                                         >
@@ -303,6 +341,58 @@ const UserDashboard = () => {
                         </CardBody>
                     </Card>
 
+                    {/* Scheduled Interviews Section */}
+                    <Card className="bg-blue-900/50 border border-blue-500/20">
+                        <CardHeader>
+                            <h2 className="font-semibold text-cyan-400">Scheduled Interviews</h2>
+                        </CardHeader>
+                        <CardBody>
+                            {scheduledInterviews
+                            .filter(job=>job.applicationStatus === "Shortlisted")
+                            .length === 0 ? (
+                                <p className="text-gray-400">No interviews scheduled</p>
+                            ) : (
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {scheduledInterviews
+                                    .filter(job=> job.applicationStatus === "Shortlisted")
+                                    .map((interview) => (
+                                        <Card 
+                                            key={interview.jobTitle} 
+                                            className="bg-blue-950 border border-blue-500/20"
+                                        >
+                                            <CardBody className="space-y-2">
+                                                <h3 className="font-bold text-cyan-400">{interview.jobTitle}</h3>
+                                                <p className="text-white"><strong>Company:</strong> {interview.companyName}</p>
+                                                <p className="text-white"><strong>Date:</strong> {new Date(interview.interviewDate).toLocaleDateString()}</p>
+                                                <p className="text-white"><strong>Time:</strong> {interview.interviewTime}</p>
+                                                <p className="text-white"><strong>Application Status:</strong> {interview.applicationStatus}</p>
+                                                <Chip 
+                                                    color="warning" 
+                                                    size="sm" 
+                                                    variant="solid"
+                                                >
+                                                    {interview.interviewMode}
+                                                </Chip>
+                                                {interview.interviewLink && (
+                                                    <Button
+                                                        as="a"
+                                                        href={interview.interviewLink}
+                                                        target="_blank"
+                                                        color="primary"
+                                                        variant="solid"
+                                                        className="w-1/4 mx-auto"
+                                                    >
+                                                        Join Interview
+                                                    </Button>
+                                                )}
+                                            </CardBody>
+                                        </Card>
+                                    ))}
+                                </div>
+                            )}
+                        </CardBody>
+                    </Card>
+
                     {/* Accepted Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
                         <CardHeader>
@@ -337,60 +427,16 @@ const UserDashboard = () => {
                         </CardBody>
                     </Card>
 
-                    {/* Scheduled Interviews Section */}
-                    <Card className="bg-blue-900/50 border border-blue-500/20">
-                        <CardHeader>
-                            <h2 className="font-semibold text-cyan-400">Scheduled Interviews</h2>
-                        </CardHeader>
-                        <CardBody>
-                            {scheduledInterviews.length === 0 ? (
-                                <p className="text-gray-400">No interviews scheduled</p>
-                            ) : (
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {scheduledInterviews.map((interview) => (
-                                        <Card 
-                                            key={interview.jobTitle} 
-                                            className="bg-blue-950 border border-blue-500/20"
-                                        >
-                                            <CardBody className="space-y-2">
-                                                <h3 className="font-bold text-cyan-400">{interview.jobTitle}</h3>
-                                                <p className="text-white"><strong>Company:</strong> {interview.companyName}</p>
-                                                <p className="text-white"><strong>Date:</strong> {new Date(interview.interviewDate).toLocaleDateString()}</p>
-                                                <p className="text-white"><strong>Time:</strong> {interview.interviewTime}</p>
-                                                <p className="text-white"><strong>Application Status:</strong> {interview.applicationStatus}</p>
-                                                <Chip 
-                                                    color="warning" 
-                                                    size="sm" 
-                                                    variant="solid"
-                                                >
-                                                    {interview.interviewMode}
-                                                </Chip>
-                                                {interview.interviewLink && (
-                                                    <Button
-                                                        as="a"
-                                                        href={interview.interviewLink}
-                                                        target="_blank"
-                                                        color="primary"
-                                                        variant="solid"
-                                                        fullWidth
-                                                    >
-                                                        Join Interview
-                                                    </Button>
-                                                )}
-                                            </CardBody>
-                                        </Card>
-                                    ))}
-                                </div>
-                            )}
-                        </CardBody>
-                    </Card>
-
                     {/* Rejected Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
                         <CardHeader>
                             <h2 className="font-semibold text-cyan-400">Rejected Jobs</h2>
                         </CardHeader>
-                        <CardBody className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <CardBody className="">
+                            {rejectedJobs.length === 0 ? (
+                                <p className="text-gray-400">No jobs rejected</p>
+                            ) : (
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {rejectedJobs.map((job) => (
                                 <Card
                                     key={job.applicationID}
@@ -410,6 +456,8 @@ const UserDashboard = () => {
                                     </CardBody>
                                 </Card>
                             ))}
+                            </div>
+                        )}
                         </CardBody>
                     </Card>
 

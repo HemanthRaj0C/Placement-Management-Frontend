@@ -16,6 +16,10 @@ import {
   } from "@nextui-org/react";
   import { FaBuilding, FaSignOutAlt } from "react-icons/fa";
   import { Avatar } from "@nextui-org/react";
+  import { MdWorkHistory } from "react-icons/md";
+import RecruiterQuiz from "./RecruiterProfile/RecruiterQuiz";
+import RecruiterQuizResult from "./RecruiterProfile/RecruiterQuizResult";
+
 
 const RecruiterDashboard = () => {
     const [jobData, setJobData] = useState({
@@ -46,6 +50,7 @@ const RecruiterDashboard = () => {
     const [jobApplications, setJobApplications] = useState([]);
     const [appliedResumes, setAppliedResumes] = useState([]);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [isAddingQuiz, setIsAddingQuiz] = useState(false);
 
     const navigate = useNavigate();
 
@@ -328,6 +333,7 @@ const RecruiterDashboard = () => {
                 {isEditMode ? (
                 <Card className="max-w-3xl ml-[20%] bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
+                <MdWorkHistory className="text-2xl text-orange-400" />
                 <h1 className="text-2xl font-bold text-white">Recruiter Dashboard</h1>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
@@ -477,6 +483,31 @@ const RecruiterDashboard = () => {
                 </CardBody>
             </Card>
         )}
+        
+            {/*Add Quiz Section */}
+            <Card className="max-w-2xl bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center bg-amber-950/50">
+                    <h2 className="font-semibold text-white">Add Quiz</h2>
+                </CardHeader>
+                <Divider className="bg-amber-500/20" />
+                <CardBody className="">
+                {isAddingQuiz ? (   
+                    <RecruiterQuiz
+                        jobs={postedJobs}
+                        token={localStorage.getItem("recruiterToken")}
+                        setIsAddingQuiz={setIsAddingQuiz}
+                    />
+                ) : (
+                    <>
+                    <h2 className="text-sm font-semibold mb-3 text-white">Add a New Quiz</h2>
+                    <Button onClick={() => setIsAddingQuiz(true)} color="warning" className="w-1/6">
+                        Quiz
+                    </Button>
+                    </>
+                )}
+                </CardBody>
+            </Card>
+
             {/* Posted Jobs Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
@@ -512,6 +543,39 @@ const RecruiterDashboard = () => {
                             </CardBody>
                             </Card>
                         ))}
+                        </div>
+                    )}
+                </CardBody>
+            </Card>
+
+            {/* Quiz Results Section */}
+            <Card className="bg-amber-900 border border-amber-500/20">
+                <CardHeader className="flex items-center gap-2">
+                    <h2 className="font-semibold text-white">Quiz Results</h2>
+                </CardHeader>
+                <CardBody>
+                    {postedJobs.length === 0 ? (
+                        <p className="text-white">No quiz results yet</p>
+                    ) : (
+                        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+                            {postedJobs.map((job) => (
+                                <Card
+                                    key={job.jobID}
+                                    className="bg-amber-950/50 border border-amber-500/20"
+                                >
+                                    <CardBody className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-orange-400">{job.jobTitle} at {job.companyName}</h3>
+                                            <Chip color="primary" size="sm" variant="solid" className="bg-orange-600/50">
+                                                {job.jobRole}
+                                            </Chip>
+                                        </div>
+                                        <RecruiterQuizResult 
+                                            job={job} 
+                                        />
+                                    </CardBody>
+                                </Card>
+                            ))}
                         </div>
                     )}
                 </CardBody>
@@ -728,9 +792,11 @@ const RecruiterDashboard = () => {
                             >
                                 <option value="">Select Shortlisted Application</option>
                                 {shortListedApplications.map((app, index) => (
+                                    <>
                                     <option key={index} value={app.applicationID}>
                                         {app.name} - {app.applicationID} - {app.jobTitle}
                                     </option>
+                                    </>
                                 ))}
                             </select>
                         </div>
@@ -784,7 +850,7 @@ const RecruiterDashboard = () => {
                                 />
                             </div>
                         )}
-                        <Button type="submit" color="default" variant="shadow" className="w-1/4">Schedule Interview</Button>
+                        <Button type="submit" color="default" variant="solid" className="w-1/4">Schedule Interview</Button>
                     </form>
                 </CardBody>
             </Card>
