@@ -19,6 +19,7 @@ import {
   FaAddressCard
 } from "react-icons/fa";
 import UserQuiz from "../User/UserProfile/UserQuiz";
+import { FcStatistics } from "react-icons/fc";
 
 const UserDashboard = () => {
     const [applications, setApplications] = useState([]);
@@ -163,6 +164,14 @@ const UserDashboard = () => {
                             startContent={<Avatar className="w-6 h-6"/>}
                         >
                             Profile
+                        </Button>
+                        <Button
+                            auto
+                            color="warning"
+                            onClick={() => navigate("/user/statistics")}
+                            startContent={<FcStatistics />}
+                        >
+                            Statistics
                         </Button>
                         <Button 
                             color="danger" 

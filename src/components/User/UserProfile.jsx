@@ -12,9 +12,9 @@ import {
     Button, 
     Avatar 
   } from "@nextui-org/react";
-  import { FaSignOutAlt } from "react-icons/fa";
-  import { MdDashboard } from "react-icons/md";
-
+import { FaSignOutAlt } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
+import { FcStatistics } from "react-icons/fc";
 
 const UserProfile = () => {
     const navigate = useNavigate();
@@ -257,6 +257,14 @@ const UserProfile = () => {
                     startContent={<MdDashboard />}
                 >
                     Dashboard
+                </Button>
+                <Button
+                    auto
+                    color="warning"
+                    onClick={() => navigate("/user/statistics")}
+                    startContent={<FcStatistics />}
+                >
+                    Statistics
                 </Button>
                 <Button
                     auto

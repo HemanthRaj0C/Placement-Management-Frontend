@@ -6,6 +6,7 @@ import RecruiterProfileForm from './RecruiterProfile/RecruiterProfileForm';
 import RecruiterProfileView from './RecruiterProfile/RecruiterProfileView';
 import { FaSignOutAlt } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { FcStatistics } from "react-icons/fc";
 
 const RecruiterProfile = () => {
     const navigate = useNavigate();
@@ -96,6 +97,14 @@ const RecruiterProfile = () => {
                         startContent={<MdDashboard />}
                     >
                         Dashboard
+                    </Button>
+                    <Button
+                        auto
+                        color="warning"
+                        onClick={() => navigate("/recruiter/statistics")}
+                        startContent={<FcStatistics />}
+                    >
+                        Statistics
                     </Button>
                     <Button
                         auto

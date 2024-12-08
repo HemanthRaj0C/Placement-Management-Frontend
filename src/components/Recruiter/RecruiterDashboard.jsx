@@ -14,11 +14,12 @@ import {
     Select,
     SelectItem,
   } from "@nextui-org/react";
-  import { FaBuilding, FaSignOutAlt } from "react-icons/fa";
-  import { Avatar } from "@nextui-org/react";
-  import { MdWorkHistory } from "react-icons/md";
+import { FaBuilding, FaSignOutAlt } from "react-icons/fa";
+import { Avatar } from "@nextui-org/react";
+import { MdWorkHistory } from "react-icons/md";
 import RecruiterQuiz from "./RecruiterProfile/RecruiterQuiz";
 import RecruiterQuizResult from "./RecruiterProfile/RecruiterQuizResult";
+import { FcStatistics } from "react-icons/fc";
 
 
 const RecruiterDashboard = () => {
@@ -315,6 +316,14 @@ const RecruiterDashboard = () => {
                             startContent={<Avatar className="w-6 h-6" />}
                         >
                             Profile
+                        </Button>
+                        <Button
+                            auto
+                            color="warning"
+                            onClick={() => navigate("/recruiter/statistics")}
+                            startContent={<FcStatistics />}
+                        >
+                            Statistics
                         </Button>
                         <Button 
                             color="danger" 

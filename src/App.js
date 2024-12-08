@@ -7,6 +7,8 @@ import RecruiterLoginPage from "./pages/recruiter/RecruiterLoginPage";
 import RecruiterRegisterPage from "./pages/recruiter/RecruiterRegisterPage";
 import RecruiterProfile from "./components/Recruiter/RecruiterProfile";
 import RecruiterDashboard from "./components/Recruiter/RecruiterDashboard";
+import UserStatistics from "./pages/user/UserStatistics";
+import RecruiterStatistics from "./pages/recruiter/RecruiterStatistics";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import UserProfile from "./components/User/UserProfile";
 import {NextUIProvider} from "@nextui-org/react";
@@ -25,6 +27,8 @@ const App = () => {
                 <Route path="/recruiter/login" element={<RecruiterLoginPage />} />
                 <Route path="/recruiter/profile" element={<RecruiterProfile />} />
                 <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+                <Route path="/user/statistics" element={<UserStatistics />} />
+                <Route path="/recruiter/statistics" element={<RecruiterStatistics />} />
             </Routes>
         </Router>
         </NextUIProvider>
