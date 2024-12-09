@@ -20,6 +20,11 @@ import {
 } from "react-icons/fa";
 import UserQuiz from "../User/UserProfile/UserQuiz";
 import { FcStatistics } from "react-icons/fc";
+import { MdAddBusiness } from "react-icons/md";
+import { FaBusinessTime } from "react-icons/fa6";
+import { RiCalendarScheduleFill } from "react-icons/ri";
+import { HiCheckCircle } from "react-icons/hi";
+import { HiBan } from "react-icons/hi";
 
 const UserDashboard = () => {
     const [applications, setApplications] = useState([]);
@@ -216,7 +221,7 @@ const UserDashboard = () => {
                     {/* Available Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
                         <CardHeader className="flex items-center gap-2">
-                            <FaBriefcase className="text-cyan-400" />
+                            <MdAddBusiness className="text-xl text-cyan-400" />
                             <h2 className="font-semibold text-white">
                                 Available Jobs {selectedJobRole && `(${selectedJobRole})`}
                             </h2>
@@ -280,7 +285,8 @@ const UserDashboard = () => {
 
                     {/* Applied Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
-                        <CardHeader>
+                        <CardHeader className="flex items-center gap-2">
+                            <FaBriefcase className="text-cyan-400" />
                             <h2 className="font-semibold text-cyan-400">Applied Jobs</h2>
                         </CardHeader>
                         <CardBody className="">
@@ -318,7 +324,8 @@ const UserDashboard = () => {
 
                     {/* Shortlisted Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
-                        <CardHeader>
+                        <CardHeader className="flex items-center gap-2">
+                            <FaBusinessTime className="text-xl text-cyan-400" />
                             <h2 className="font-semibold text-cyan-400">Shortlisted Jobs</h2>
                         </CardHeader>
                         <CardBody className="">
@@ -352,7 +359,8 @@ const UserDashboard = () => {
 
                     {/* Scheduled Interviews Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
-                        <CardHeader>
+                        <CardHeader className="flex items-center gap-2">
+                            <RiCalendarScheduleFill className="text-xl text-cyan-400" />
                             <h2 className="font-semibold text-cyan-400">Scheduled Interviews</h2>
                         </CardHeader>
                         <CardBody>
@@ -404,7 +412,8 @@ const UserDashboard = () => {
 
                     {/* Accepted Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
-                        <CardHeader>
+                        <CardHeader className="flex items-center gap-2">
+                            <HiCheckCircle className="text-xl text-cyan-400" />
                             <h2 className="font-semibold text-cyan-400">Accepted Jobs</h2>
                         </CardHeader>
                         <CardBody className="">
@@ -438,7 +447,8 @@ const UserDashboard = () => {
 
                     {/* Rejected Jobs Section */}
                     <Card className="bg-blue-900/50 border border-blue-500/20">
-                        <CardHeader>
+                        <CardHeader className="flex items-center gap-2">
+                            <HiBan className="text-xl text-cyan-400" />
                             <h2 className="font-semibold text-cyan-400">Rejected Jobs</h2>
                         </CardHeader>
                         <CardBody className="">

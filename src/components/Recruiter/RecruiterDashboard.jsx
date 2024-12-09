@@ -14,13 +14,18 @@ import {
     Select,
     SelectItem,
   } from "@nextui-org/react";
-import { FaBuilding, FaSignOutAlt } from "react-icons/fa";
+import { FaBuilding, FaSignOutAlt, FaBriefcase, FaTrophy } from "react-icons/fa";
 import { Avatar } from "@nextui-org/react";
-import { MdWorkHistory } from "react-icons/md";
+import { MdCreate, MdWorkHistory } from "react-icons/md";
 import RecruiterQuiz from "./RecruiterProfile/RecruiterQuiz";
 import RecruiterQuizResult from "./RecruiterProfile/RecruiterQuizResult";
 import { FcStatistics } from "react-icons/fc";
-
+import { MdAddBusiness } from "react-icons/md";
+import { FaBusinessTime } from "react-icons/fa6";
+import { RiCalendarScheduleFill } from "react-icons/ri";
+import { HiCheckCircle } from "react-icons/hi";
+import { HiBan } from "react-icons/hi";
+import { GrSchedulePlay } from "react-icons/gr";
 
 const RecruiterDashboard = () => {
     const [jobData, setJobData] = useState({
@@ -341,9 +346,9 @@ const RecruiterDashboard = () => {
                 {/* Post a New Job Section */}
                 {isEditMode ? (
                 <Card className="max-w-3xl ml-[20%] bg-amber-900 border border-amber-500/20">
-                <CardHeader className="flex justify-between items-center bg-amber-950/50 py-4 px-6">
+                <CardHeader className="flex justify-start items-center gap-2 bg-amber-950/50 py-4 px-6">
                 <MdWorkHistory className="text-2xl text-orange-400" />
-                <h1 className="text-2xl font-bold text-white">Recruiter Dashboard</h1>
+                <h1 className="text-2xl font-bold text-white">New Job</h1>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
                 <CardBody className="p-6">
@@ -480,7 +485,8 @@ const RecruiterDashboard = () => {
         ) : (
 
             <Card className="max-w-xl bg-amber-900 border border-amber-500/20">
-                <CardHeader className="flex items-center bg-amber-950/50">
+                <CardHeader className="flex items-center gap-2 bg-amber-950/50">
+                <MdAddBusiness className="text-xl text-orange-400" />
                 <h2 className="font-semibold text-white">New Job</h2>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
@@ -495,7 +501,8 @@ const RecruiterDashboard = () => {
         
             {/*Add Quiz Section */}
             <Card className="max-w-2xl bg-amber-900 border border-amber-500/20">
-                <CardHeader className="flex items-center bg-amber-950/50">
+                <CardHeader className="flex items-center gap-2 bg-amber-950/50">
+                    <MdCreate className="text-xl text-orange-400" />
                     <h2 className="font-semibold text-white">Add Quiz</h2>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
@@ -520,6 +527,7 @@ const RecruiterDashboard = () => {
             {/* Posted Jobs Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
+                    <FaBriefcase className="text-orange-400" />
                     <h2 className="font-semibold text-white">Your Posted Jobs</h2>
                 </CardHeader>
                 <CardBody>
@@ -560,6 +568,7 @@ const RecruiterDashboard = () => {
             {/* Quiz Results Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
+                    <FaTrophy className="text-orange-400" />
                     <h2 className="font-semibold text-white">Quiz Results</h2>
                 </CardHeader>
                 <CardBody>
@@ -593,6 +602,7 @@ const RecruiterDashboard = () => {
             {/* Job Applications Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
+                    <FaBriefcase className="text-orange-400" />
                     <h2 className="font-semibold text-white">Job Applications</h2>
                 </CardHeader>
                 <CardBody className="">
@@ -672,6 +682,7 @@ const RecruiterDashboard = () => {
             {/* Shortlisted Applications Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
+                    <FaBusinessTime className="text-xl text-orange-400" />
                     <h2 className="font-semibold text-white">Shortlisted Applications</h2>
                 </CardHeader>
                 <CardBody className="">
@@ -706,6 +717,7 @@ const RecruiterDashboard = () => {
             {/* Scheduled Interviews Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
+                    <RiCalendarScheduleFill className="text-xl text-orange-400" />
                     <h2 className="font-semibold text-white">Scheduled Interviews</h2>
                 </CardHeader>
                 <CardBody className="">
@@ -785,6 +797,7 @@ const RecruiterDashboard = () => {
             {/* Interview Scheduling Section */}
             <Card className="max-w-xl bg-amber-900 border border-amber-500/20 mt-8">
                 <CardHeader className="flex items-center bg-amber-950/50 gap-2">
+                    <GrSchedulePlay className="text-xl text-orange-400" />
                     <h2 className="font-semibold text-white">Schedule Interview</h2>
                 </CardHeader>
                 <Divider className="bg-amber-500/20" />
@@ -867,6 +880,7 @@ const RecruiterDashboard = () => {
             {/* Accepted Applications Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
+                    <HiCheckCircle className="text-xl text-orange-400" />
                     <h2 className="font-semibold text-white">Accepted Applications</h2>
                 </CardHeader>
                 <CardBody className="">
@@ -901,6 +915,7 @@ const RecruiterDashboard = () => {
             {/* Rejected Applications Section */}
             <Card className="bg-amber-900 border border-amber-500/20">
                 <CardHeader className="flex items-center gap-2">
+                    <HiBan className="text-xl text-orange-400" />
                     <h2 className="font-semibold text-white">Rejected Applications</h2>
                 </CardHeader>
                 <CardBody className="">

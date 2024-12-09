@@ -3,8 +3,6 @@ import {
   Card, 
   CardHeader, 
   CardBody, 
-  Button, 
-  Input 
 } from "@nextui-org/react";
 import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";

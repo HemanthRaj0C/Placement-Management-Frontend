@@ -11,6 +11,7 @@ import {
     Divider
 } from '@nextui-org/react';
 import axios from 'axios';
+import { IoIosCreate } from 'react-icons/io';
 
 const RecruiterQuiz = ({ jobs = [], token, setIsAddingQuiz }) => {
     const [selectedJob, setSelectedJob] = useState('');
@@ -140,8 +141,9 @@ const RecruiterQuiz = ({ jobs = [], token, setIsAddingQuiz }) => {
     };
 
     return (
-        <Card className="bg-amber-900 border border-amber-500/20 max-w-xl">
-            <CardHeader className="bg-amber-950/50 py-4 px-6">
+        <Card className="bg-amber-900 border border-amber-500/20 max-w-xl ml-9">
+            <CardHeader className="bg-amber-950/50 gap-2 py-4 px-6">
+                <IoIosCreate className="text-3xl text-orange-400" />
                 <h2 className="text-2xl font-semibold text-white">Create Quiz</h2>
             </CardHeader>
             <Divider className="bg-amber-500/20" />

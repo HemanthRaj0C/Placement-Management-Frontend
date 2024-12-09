@@ -74,10 +74,11 @@ const UserProfile = () => {
     };
 
     const handleSkillChange = (type, value) => {
-        const skillArray = value.split(',').map(skill => skill.trim()).filter(skill => skill);
-        setFormData(prev => ({
+        // Update the raw input as a string in `formData` to avoid cursor jumps
+        setFormData((prev) => ({
             ...prev,
-            [type]: skillArray
+            [`${type}Raw`]: value, // Save the raw string
+            [type]: value.split(',').map(skill => skill.trim()).filter(skill => skill), // Update the array
         }));
     };
 

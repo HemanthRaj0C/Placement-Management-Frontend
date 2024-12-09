@@ -11,6 +11,7 @@ import {
     ScrollShadow
 } from '@nextui-org/react';
 import axios from 'axios';
+import { HiQuestionMarkCircle } from "react-icons/hi";
 
 const UserQuiz = ({ 
     isOpen, 
@@ -95,7 +96,10 @@ const UserQuiz = ({
                 {(onClose) => (
                     <>
                         <ModalHeader className="flex flex-col gap-1">
+                            <div className='flex items-center gap-2'>
+                            <HiQuestionMarkCircle className="text-2xl text-cyan-400" />
                             <h2 className="text-xl font-bold">{quiz.quizTitle}</h2>
+                            </div>
                             <p className="text-sm text-gray-500">
                                 Passing Percentage: {quiz.passingPercentage}%
                             </p>

@@ -105,7 +105,7 @@ const ProfileCreationForm = ({
                         <Select
                             label="Degree"
                             name="degree"
-                            variant="bordered"
+                            variant='bordered'
                             color="primary"
                             startContent={<FaGraduationCap className="text-cyan-400" />}
                             selectedKeys={formData.degree ? [formData.degree] : []}
@@ -172,7 +172,7 @@ const ProfileCreationForm = ({
 
                     <Input
                         label="Technical Skills (comma-separated)"
-                        value={formData.technicalSkills.join(', ')}
+                        value={formData.technicalSkillsRaw || formData.technicalSkills.join(', ')}
                         onChange={(e) => handleSkillChange('technicalSkills', e.target.value)}
                         startContent={<FaCode className="text-cyan-400" />}
                         variant="bordered"
@@ -182,7 +182,7 @@ const ProfileCreationForm = ({
 
                     <Input
                         label="Other Skills (comma-separated)"
-                        value={formData.otherSkills.join(', ')}
+                        value={formData.otherSkillsRaw || formData.otherSkills.join(', ')}
                         onChange={(e) => handleSkillChange('otherSkills', e.target.value)}
                         startContent={<FaCode className="text-cyan-400" />}
                         variant="bordered"
