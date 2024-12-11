@@ -26,7 +26,7 @@ const RecruiterLogin = () => {
         }
         e.preventDefault();
         try{
-            const response = await axios.post("http://backend:3001/api/recruiterLogin", {
+            const response = await axios.post("http://localhost:3001/api/recruiterLogin", {
                 email: email,
                 password: password
             });

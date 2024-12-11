@@ -43,7 +43,7 @@ const RecruiterGraph = () => {
         const token = localStorage.getItem('recruiterToken');
 
         const appliedJobsResponse = await axios.get(
-          'http://backend:3001/api/jobApplications',
+          'http://localhost:3001/api/jobApplications',
           { headers: { recruiterToken: token } }
         );
 

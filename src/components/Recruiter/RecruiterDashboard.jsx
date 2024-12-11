@@ -74,7 +74,7 @@ const RecruiterDashboard = () => {
             const token = localStorage.getItem("recruiterToken");
             console.log(jobData)
             const response = await axios.post(
-                "http://backend:3001/api/jobs", 
+                "http://localhost:3001/api/jobs", 
                 jobData,
                 { headers: { recruiterToken: token } }
             );
@@ -106,7 +106,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.get(
-                "http://backend:3001/api/postedJobs", 
+                "http://localhost:3001/api/postedJobs", 
                 { headers: { recruiterToken: token } }
             );
             setPostedJobs(response.data);
@@ -120,7 +120,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.get(
-                "http://backend:3001/api/jobApplications", 
+                "http://localhost:3001/api/jobApplications", 
                 { headers: { recruiterToken: token } }
             );
             const activeApplications = response.data.filter(
@@ -149,7 +149,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.get(
-                "http://backend:3001/api/appliedResume", 
+                "http://localhost:3001/api/appliedResume", 
                 { headers: { recruiterToken: token } }
             );
             setAppliedResumes(response.data.resumes);
@@ -163,7 +163,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.get(
-                `http://backend:3001/api/download-resume/${resumeId}`, 
+                `http://localhost:3001/api/download-resume/${resumeId}`, 
                 { 
                     headers: { recruiterToken: token },
                     responseType: 'blob' 
@@ -189,7 +189,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.get(
-                `http://backend:3001/api/download-resume/${resumeId}`, 
+                `http://localhost:3001/api/download-resume/${resumeId}`, 
                 { 
                     headers: { recruiterToken: token },
                     responseType: 'blob' 
@@ -211,7 +211,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.patch(
-                "http://backend:3001/api/updateApplicationStatus", 
+                "http://localhost:3001/api/updateApplicationStatus", 
                 { applicationID, applicationStatus: status },
                 { headers: { recruiterToken: token } }
             );
@@ -234,7 +234,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.post(
-                "http://backend:3001/api/schedule-interview", 
+                "http://localhost:3001/api/schedule-interview", 
                 interviewForm,
                 { headers: { recruiterToken: token } }
             );
@@ -262,7 +262,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.get(
-                "http://backend:3001/api/interviews", 
+                "http://localhost:3001/api/interviews", 
                 { headers: { recruiterToken: token } }
             );
             setInterviews(response.data);
@@ -284,7 +284,7 @@ const RecruiterDashboard = () => {
         try {
             const token = localStorage.getItem("recruiterToken");
             const response = await axios.post(
-                "http://backend:3001/api/update-interview", 
+                "http://localhost:3001/api/update-interview", 
                 { applicationID, applicationStatus: status },
                 { headers: { recruiterToken: token } }
             );

@@ -60,7 +60,7 @@ const RecruiterRegister = () => {
         }
 
         try {
-            const response = await axios.post('http://backend:3001/api/recruiterRegister', formData);
+            const response = await axios.post('http://localhost:3001/api/recruiterRegister', formData);
             setSuccess(response.data.message);
             if (response.status === 201) {
                 navigate('/recruiter/login');

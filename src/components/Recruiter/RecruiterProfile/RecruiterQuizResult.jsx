@@ -21,7 +21,7 @@ const RecruiterQuizResult = ({ job }) => {
             setIsLoading(true);
             try {
                 const response = await axios.get(
-                    `http://backend:3001/api/quizResults/${job.jobID}`, 
+                    `http://localhost:3001/api/quizResults/${job.jobID}`, 
                     { 
                         headers: { 
                             recruiterToken: localStorage.getItem("recruiterToken") 
