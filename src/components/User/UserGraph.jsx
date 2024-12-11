@@ -42,7 +42,7 @@ const UserJobStatistics = () => {
         const token = localStorage.getItem('token');
 
         const appliedJobsResponse = await axios.get(
-          'http://localhost:3001/api/appliedJobs',
+          'http://backend:3001/api/appliedJobs',
           { headers: { token: token } }
         );
 

@@ -122,7 +122,7 @@ const RecruiterQuiz = ({ jobs = [], token, setIsAddingQuiz }) => {
 
         try {
             const response = await axios.post(
-                'http://localhost:3001/api/createQuiz', 
+                'http://backend:3001/api/createQuiz', 
                 { 
                     jobID: selectedJob, 
                     quizTitle, 

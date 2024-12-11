@@ -82,7 +82,7 @@ const UserRegister = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/userRegister",
+        "http://backend:3001/api/userRegister",
         formData
       );
       setSuccess(response.data.message);

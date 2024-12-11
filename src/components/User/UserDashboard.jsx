@@ -42,7 +42,7 @@ const UserDashboard = () => {
 
     const fetchApplications = async () => {
         try {
-            const jobs = await axios.get("http://localhost:3001/api/jobs");
+            const jobs = await axios.get("http://backend:3001/api/jobs");
             setApplications(jobs.data);
             setFilteredApplications(jobs.data);
         }
@@ -62,7 +62,7 @@ const UserDashboard = () => {
             if (!quizPassed) {
                 try {
                     const quizResponse = await axios.get(
-                        `http://localhost:3001/api/getQuiz/${jobID}`,
+                        `http://backend:3001/api/getQuiz/${jobID}`,
                         { headers: { token } }
                     );
 
@@ -80,7 +80,7 @@ const UserDashboard = () => {
             }
 
             const response = await axios.post(
-                "http://localhost:3001/api/applyJob", 
+                "http://backend:3001/api/applyJob", 
                 { jobID: jobID },
                 { headers: { token: token } }
             );
@@ -97,7 +97,7 @@ const UserDashboard = () => {
     const fetchAppliedJobs = async () => {
         try {
             const token = localStorage.getItem("token");
-            const appliedJobs = await axios.get("http://localhost:3001/api/appliedJobs", 
+            const appliedJobs = await axios.get("http://backend:3001/api/appliedJobs", 
                 { headers: { token: token } }
             );
             const shortlistedJobs = appliedJobs.data.filter(job => job.applicationStatus === "Shortlisted");
@@ -137,7 +137,7 @@ const UserDashboard = () => {
     const fetchScheduledInterviews = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get("http://localhost:3001/api/user-interviews", 
+            const response = await axios.get("http://backend:3001/api/user-interviews", 
                 { headers: { token: token } }
             );
             

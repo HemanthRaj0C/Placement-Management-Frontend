@@ -29,7 +29,7 @@ const UserQuiz = ({
             if (isOpen && jobID) {
                 try {
                     const response = await axios.get(
-                        `http://localhost:3001/api/getQuiz/${jobID}`, 
+                        `http://backend:3001/api/getQuiz/${jobID}`, 
                         { headers: { token } }
                     );
                     setQuiz(response.data);
@@ -62,7 +62,7 @@ const UserQuiz = ({
         setIsSubmitting(true);
         try {
             const response = await axios.post(
-                'http://localhost:3001/api/submitQuiz', 
+                'http://backend:3001/api/submitQuiz', 
                 { 
                     quizID: quiz.quizID, 
                     jobID: quiz.jobID, 

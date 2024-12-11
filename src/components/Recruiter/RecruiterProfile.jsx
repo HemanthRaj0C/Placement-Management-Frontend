@@ -31,7 +31,7 @@ const RecruiterProfile = () => {
     const fetchRecruiterProfile = async () => {
         try {
             const token = localStorage.getItem('recruiterToken');
-            const response = await axios.get('http://localhost:3001/api/recruiterProfile', {
+            const response = await axios.get('http://backend:3001/api/recruiterProfile', {
                 headers: { recruiterToken: token }
             });
 
@@ -63,7 +63,7 @@ const RecruiterProfile = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('recruiterToken');
-            await axios.post('http://localhost:3001/api/recruiterProfile', formData, {
+            await axios.post('http://backend:3001/api/recruiterProfile', formData, {
                 headers: { recruiterToken: token }
             });
 

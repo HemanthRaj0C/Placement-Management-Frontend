@@ -45,7 +45,7 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:3001/api/userProfile', {
+            const response = await axios.get('http://backend:3001/api/userProfile', {
                 headers: { token: token }
             });
             
@@ -101,7 +101,7 @@ const UserProfile = () => {
     const handleSubmit = async (data) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:3001/api/userProfile', data, {
+            await axios.post('http://backend:3001/api/userProfile', data, {
                 headers: { token: token }
             });
 
@@ -137,7 +137,7 @@ const UserProfile = () => {
         try {
             setIsUploading(true);
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:3001/api/upload-resume', formData, {
+            await axios.post('http://backend:3001/api/upload-resume', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     token: token
@@ -162,7 +162,7 @@ const UserProfile = () => {
     
         try {
             // Create a temporary anchor element to trigger download
-            const response = await axios.get('http://localhost:3001/api/download-resume', {
+            const response = await axios.get('http://backend:3001/api/download-resume', {
                 headers: { token: token },
                 responseType: 'blob' // Important for file download
             });
@@ -203,7 +203,7 @@ const UserProfile = () => {
         }
         try {
             // Create a temporary anchor element to trigger download
-            const response = await axios.get('http://localhost:3001/api/download-resume', {
+            const response = await axios.get('http://backend:3001/api/download-resume', {
                 headers: { token: token },
                 responseType: 'blob' // Important for file download
             });
@@ -223,7 +223,7 @@ const UserProfile = () => {
     const fetchLatestResume = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:3001/api/latest-resume', {
+            const response = await axios.get('http://backend:3001/api/latest-resume', {
                 headers: { token: token }
             });
             

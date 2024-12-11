@@ -26,7 +26,7 @@ const UserLogin = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/api/userLogin", {
+      const response = await axios.post("http://backend:3001/api/userLogin", {
         email: email,
         password: password
       });
